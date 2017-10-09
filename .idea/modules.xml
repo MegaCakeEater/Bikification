@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Bikification.iml" filepath="$PROJECT_DIR$/Bikification.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Gamification.iml" filepath="$PROJECT_DIR$/Gamification.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
