@@ -116,7 +116,6 @@ public class GetDirectionsAsync extends AsyncTask<LatLng, Void, List<LatLng>> {
                         (((double) lng / 1E5)));
                   poly.add(p);
             }
-
             return poly;
       }
 }
