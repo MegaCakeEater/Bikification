@@ -22,10 +22,22 @@ public class MainActivity extends Activity {
                         login();
                   }
             });
+
+            findViewById(R.id.signupButton).setOnClickListener(new View.OnClickListener() {
+                  @Override
+                  public void onClick(View v) {
+                        signUp();
+                  }
+            });
       }
 
       private void login() {
             Intent i = new Intent(this, SearchLocationActivity.class);
+            startActivity(i);
+      }
+
+      private void signUp() {
+            Intent i = new Intent(this, SignupActivity.class);
             startActivity(i);
       }
 
