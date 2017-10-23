@@ -64,7 +64,7 @@ public class SearchLocationActivity extends Activity {
               .build();
 
         PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
-              getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+              getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment_a);
         autocompleteFragment.setFilter(typeFilter);
 
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
@@ -80,7 +80,7 @@ public class SearchLocationActivity extends Activity {
         });
 
         PlaceAutocompleteFragment autocompleteFragment2 = (PlaceAutocompleteFragment)
-              getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment2);
+              getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment_b);
         autocompleteFragment2.setFilter(typeFilter);
 
         autocompleteFragment2.setOnPlaceSelectedListener(new PlaceSelectionListener() {
