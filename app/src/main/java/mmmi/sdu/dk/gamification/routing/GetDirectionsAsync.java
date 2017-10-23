@@ -1,10 +1,15 @@
 package mmmi.sdu.dk.gamification.routing;
 
 import android.graphics.Color;
+import android.graphics.Point;
 import android.os.AsyncTask;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
@@ -15,12 +20,15 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
+import mmmi.sdu.dk.gamification.R;
 import mmmi.sdu.dk.gamification.utils.JSONParser;
 
 public class GetDirectionsAsync extends AsyncTask<LatLng, Void, List<LatLng>> {
       GoogleMap mMap;
       Polyline line;
+      List<MarkerOptions> items;
 
       JSONParser jsonParser;
       String DIRECTIONS_URL = "https://maps.googleapis.com/maps/api/directions/json";
@@ -37,6 +45,7 @@ public class GetDirectionsAsync extends AsyncTask<LatLng, Void, List<LatLng>> {
 
       @Override
       protected List<LatLng> doInBackground(LatLng... params) {
+            items = new ArrayList();
             LatLng start = params[0];
             LatLng end = params[1];
 
@@ -83,6 +92,10 @@ public class GetDirectionsAsync extends AsyncTask<LatLng, Void, List<LatLng>> {
                   options.add(point);
             }
             line = mMap.addPolyline(options);
+            for(MarkerOptions m : items) {
+                  m.icon(BitmapDescriptorFactory.fromResource(R.drawable.pumpkin_icon));
+                  mMap.addMarker(m);
+            }
 
       }
 
@@ -114,6 +127,15 @@ public class GetDirectionsAsync extends AsyncTask<LatLng, Void, List<LatLng>> {
 
                   LatLng p = new LatLng((((double) lat / 1E5)),
                         (((double) lng / 1E5)));
+                  Random rand = new Random();
+
+                  //temporary one in ten random chance for collectible
+                  if(rand.nextInt(10) == 5) {
+                        MarkerOptions m = new MarkerOptions();
+                        m.position(p);
+                        m.title("collectible!");
+                        items.add(m);
+                  }
                   poly.add(p);
             }
             return poly;
