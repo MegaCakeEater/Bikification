@@ -1,59 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     tools:context="mmmi.sdu.dk.gamification.MainActivity">
 
-    <Button
-        android:id="@+id/btn_maps"
+    <EditText
+        android:id="@+id/userText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:background="@android:color/transparent"
+        android:ems="10"
+        android:drawablePadding="12dp"
+        android:padding="20dp"
+        android:layout_marginTop="100dp"
+        android:hint="Username"
+        android:textColorHint="#000000"
+        android:maxLines="1"
+        android:drawableLeft="@drawable/userbig"
+        />
+
+    <EditText
+        android:id="@+id/pwdText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:background="@android:color/transparent"
+        android:ems="10"
+        android:drawablePadding="12dp"
+        android:padding="20dp"
+        android:hint="*******"
+        android:textColorHint="#000000"
+        android:maxLines="1"
+        android:drawableLeft="@drawable/key"
+        />
+
+    <CheckBox
+        android:id="@+id/rememberButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Go to Map"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.421"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.887"/>
+        android:padding="20dp"
+        android:layout_marginLeft="5dp"
+        android:text="Remember me"
+        android:textColor="#000000"
+        />
 
     <Button
-        android:id="@+id/btn_place2"
-        android:layout_width="72dp"
-        android:layout_height="44dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:text="To"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.817"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.346"
-        tools:layout_editor_absoluteX="244dp"/>
+        android:id="@+id/loginButton"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="5dp"
+        android:alpha="0.75"
+        android:background="#ffffff"
+        android:textColor="#72c3cd"
+        android:clickable="true"
+        android:text="Login"
+        android:textAllCaps="false" />
 
     <Button
-        android:id="@+id/btn_place1"
-        android:layout_width="wrap_content"
+        android:id="@+id/signupButton"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="5dp"
+        android:alpha="0.75"
+        android:background="#72c3cd"
+        android:clickable="true"
+        android:text="Sign up"
+        android:textAllCaps="false"
+        android:textColor="#ffffff" />
+
+    <TextView
+        android:id="@+id/forgetText"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:text="From"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.107"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.346"/>
+        android:text="Forget password ?"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="150dp"
+        android:textColor="#000000"
+        android:clickable="true"
+        />
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
