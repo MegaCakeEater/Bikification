@@ -11,14 +11,19 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 
 import java.io.Serializable;
 
@@ -48,22 +53,45 @@ public class SearchLocationActivity extends Activity {
                         PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
             }
         }
-        findViewById(R.id.btn_place1).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getPlace(PLACES1_REQUEST);
-            }
-        });
-        findViewById(R.id.btn_place2).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getPlace(PLACES2_REQUEST);
-            }
-        });
         findViewById(R.id.btn_maps).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startMap();
+            }
+        });
+        AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+              .setCountry("DK")
+              .build();
+
+        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+              getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+        autocompleteFragment.setFilter(typeFilter);
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+               ApplicationHelper.setPlace1(place);
+            }
+
+            @Override
+            public void onError(Status status) {
+                System.out.println(status);
+            }
+        });
+
+        PlaceAutocompleteFragment autocompleteFragment2 = (PlaceAutocompleteFragment)
+              getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment2);
+        autocompleteFragment2.setFilter(typeFilter);
+
+        autocompleteFragment2.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                ApplicationHelper.setPlace2(place);
+            }
+
+            @Override
+            public void onError(Status status) {
+                System.out.println(status);
             }
         });
     }
@@ -77,29 +105,6 @@ public class SearchLocationActivity extends Activity {
             } else {
             }
             return;
-        }
-    }
-
-    private void getPlace(int number) {
-        try {
-            Intent i = new PlacePicker.IntentBuilder().build(this);
-            startActivityForResult(i,number);
-        } catch (GooglePlayServicesNotAvailableException | GooglePlayServicesRepairableException e) {
-            e.printStackTrace();
-        }
-    }
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PLACES1_REQUEST) {
-            if (resultCode == RESULT_OK) {
-                Place place = PlacePicker.getPlace(getApplicationContext(), data);
-                ApplicationHelper.setPlace1(place);
-            }
-        } else if (requestCode == PLACES2_REQUEST) {
-            if (resultCode == RESULT_OK) {
-                Place place = PlacePicker.getPlace(getApplicationContext(), data);
-                ApplicationHelper.setPlace2(place);
-            }
         }
     }
 
