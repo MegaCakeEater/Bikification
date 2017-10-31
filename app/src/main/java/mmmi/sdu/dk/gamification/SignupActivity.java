@@ -15,6 +15,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
 
 public class SignupActivity extends Activity {
 
@@ -51,7 +52,7 @@ public class SignupActivity extends Activity {
         String password  = editTextPassword.getText().toString().trim();
 
         if(TextUtils.isEmpty(email)){
-            Toast.makeText(this,"Please enter email",Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"Please enter username",Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -71,15 +72,13 @@ public class SignupActivity extends Activity {
                         if(task.isSuccessful()){
                             Toast.makeText(SignupActivity.this,"Successfully registered", Toast.LENGTH_LONG).show();
                         }else{
-                            Toast.makeText(SignupActivity.this,"Registration Error",Toast.LENGTH_LONG).show();
+                            FirebaseAuthException e = (FirebaseAuthException)task.getException();
+                            Toast.makeText(SignupActivity.this,"Registration Error"+"   "+e.getMessage(),Toast.LENGTH_LONG).show();
+                            return;
                         }
                         progressDialog.dismiss();
                     }
                 });
 
     }
-
-
-
-
 }
