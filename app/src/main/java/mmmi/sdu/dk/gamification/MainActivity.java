@@ -29,16 +29,26 @@ public class MainActivity extends Activity {
                         signUp();
                   }
             });
+
+            findViewById(R.id.forgetText).setOnClickListener(new View.OnClickListener() {
+                  @Override
+                  public void onClick(View v) {
+                        forgetPwd();
+                  }
+            });
       }
 
       private void login() {
-            Intent i = new Intent(this, SearchLocationActivity.class);
-            startActivity(i);
+            //Firebase
       }
 
       private void signUp() {
             Intent i = new Intent(this, SignupActivity.class);
             startActivity(i);
+      }
+
+      private void forgetPwd() {
+
       }
 
 
