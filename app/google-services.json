@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "713611244051",
+    "firebase_url": "https://bikification.firebaseio.com",
+    "project_id": "bikification",
+    "storage_bucket": "bikification.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:713611244051:android:2d19d15ca4b13082",
+        "android_client_info": {
+          "package_name": "mmmi.sdu.dk.gamification"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "713611244051-03ik18ni0urga5fppf9grm2dljeocngb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "mmmi.sdu.dk.gamification",
+            "certificate_hash": "c5cf202d1877d12e9fea14b649234a4c34dd32ec"
+          }
+        },
+        {
+          "client_id": "713611244051-olvabq4cu8kq8jut1r279a6suuuj4itp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdwyPF0d0Z0FvnoGrB8Cy5sUcyZYc_zZE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "713611244051-olvabq4cu8kq8jut1r279a6suuuj4itp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

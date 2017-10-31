@@ -23,6 +23,17 @@
         android:drawableLeft="@drawable/userbig"
         />
 
+    <TextView
+        android:id="@+id/information"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Information: Username is your email address."
+        android:textStyle="bold|italic"
+        android:layout_marginLeft="20dp"
+        android:textSize="16dp"
+        android:textColor="#40a6b3"/>
+
+
     <EditText
         android:id="@+id/pwdText"
         android:layout_width="match_parent"
