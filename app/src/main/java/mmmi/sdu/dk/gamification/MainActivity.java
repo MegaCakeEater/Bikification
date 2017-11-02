@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
 
 import mmmi.sdu.dk.gamification.R;
 import mmmi.sdu.dk.gamification.SearchLocationActivity;
@@ -96,6 +97,10 @@ public class MainActivity extends Activity {
                                       finish();
                                       startActivity(new Intent(getApplicationContext(), MenuActivity.class));
                                 }
+                                else {
+                                      FirebaseAuthException e = (FirebaseAuthException)task.getException();
+                                      Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
                           }
                     });
       }
@@ -106,6 +111,7 @@ public class MainActivity extends Activity {
       }
 
       private void forgetPwd() {
-            //Firebase
+            Intent i = new Intent(this, ForgetPasswordActivity.class);
+            startActivity(i);
       }
 }

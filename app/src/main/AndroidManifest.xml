@@ -30,6 +30,7 @@
         <activity android:name=".MenuActivity"></activity>
         <activity android:name=".ChatActivity"></activity>
         <activity android:name=".ShopActivity"></activity>
+        <activity android:name=".ForgetPasswordActivity"></activity>
     </application>
 
 </manifest>

@@ -74,12 +74,12 @@ public class MenuActivity extends Activity {
     }
 
     private void shop() {
-        Intent i = new Intent(this, ChatActivity.class);
+        Intent i = new Intent(this, ShopActivity.class);
         startActivity(i);
     }
 
     private void chat() {
-        Intent i = new Intent(this, ShopActivity.class);
+        Intent i = new Intent(this, ChatActivity.class);
         startActivity(i);
     }
 }

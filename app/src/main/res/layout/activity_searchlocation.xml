@@ -8,39 +8,52 @@
         tools:context="mmmi.sdu.dk.gamification.SearchLocationActivity"
         android:weightSum="1">
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/homeButton1"
+            android:layout_width="34dp"
+            android:layout_height="36dp"
+            android:layout_marginLeft="345dp"
+            android:layout_marginTop="0dp"
+            android:background="@android:color/transparent"
+            android:drawableLeft="@drawable/home"
+            android:drawablePadding="12dp"
+            android:maxLines="1"
+            android:textColorHint="#000000"
+            android:textSize="15dp" />
 
-            <Button
-                android:id="@+id/btn_place1"
-                android:layout_width="130dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="150dp"
-                android:layout_marginLeft="20dp"
-                android:clickable="false"
-                android:drawableLeft="@drawable/locationa"
-                android:drawablePadding="12dp"
-                android:padding="10dp"
-                android:text="From"
-                android:textAllCaps="false"
-                android:textColor="#000000"
-                android:textSize="16dp" />
-            />
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="220dp">
 
-            <fragment
-                android:id="@+id/place_autocomplete_fragment_a"
-                android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="150dp"
-                android:background="@android:color/transparent"
-                android:padding="10dp"
-                android:text="Location A"
-                android:textSize="16dp"
-                android:textColor="#72c3cd" />
-        </LinearLayout>
+        <Button
+            android:id="@+id/btn_place1"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="150dp"
+            android:clickable="false"
+            android:drawableLeft="@drawable/locationa"
+            android:drawablePadding="12dp"
+            android:padding="10dp"
+            android:text="From"
+            android:textAllCaps="false"
+            android:textColor="#000000"
+            android:textSize="16dp" />
+        />
+
+        <fragment
+            android:id="@+id/place_autocomplete_fragment_a"
+            android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="150dp"
+            android:background="@android:color/transparent"
+            android:padding="10dp"
+            android:text="Location A"
+            android:textColor="#72c3cd"
+            android:textSize="16dp" />
+    </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

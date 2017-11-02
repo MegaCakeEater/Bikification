@@ -40,6 +40,13 @@ public class SearchLocationActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_searchlocation);
+
+        findViewById(R.id.homeButton1).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {redirectHome();
+            }
+        });
+
         PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION =  ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION);
         if (ContextCompat.checkSelfPermission(this,
@@ -110,6 +117,11 @@ public class SearchLocationActivity extends Activity {
 
     private void startMap() {
         Intent i = new Intent(this, MapsActivity.class);
+        startActivity(i);
+    }
+
+    private void redirectHome() {
+        Intent i = new Intent(this, MenuActivity.class);
         startActivity(i);
     }
 }

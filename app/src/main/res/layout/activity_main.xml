@@ -16,7 +16,7 @@
         android:ems="10"
         android:drawablePadding="12dp"
         android:padding="20dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="130dp"
         android:hint="Username"
         android:textColorHint="#000000"
         android:maxLines="1"
@@ -47,16 +47,6 @@
         android:textColorHint="#000000"
         android:maxLines="1"
         android:drawableLeft="@drawable/key"
-        />
-
-    <CheckBox
-        android:id="@+id/rememberButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="20dp"
-        android:layout_marginLeft="5dp"
-        android:text="Remember me"
-        android:textColor="#000000"
         />
 
     <Button
