@@ -30,6 +30,14 @@ public class MenuActivity extends Activity {
         TextView tx = (TextView)findViewById(R.id.welcomeTxt);
         tx.setTypeface(disney);
 
+        //Log out
+        findViewById(R.id.logout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logout();
+            }
+        });
+
         //Redirection
         findViewById(R.id.searchButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,6 +60,13 @@ public class MenuActivity extends Activity {
             }
         });
     }
+
+    private void logout() {
+        firebaseAuth.signOut();
+        finish();
+        startActivity(new Intent(this, MainActivity.class));
+    }
+
 
     private void search() {
         Intent i = new Intent(this, SearchLocationActivity.class);
