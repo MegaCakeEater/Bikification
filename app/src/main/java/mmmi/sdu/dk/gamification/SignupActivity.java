@@ -70,13 +70,18 @@ public class SignupActivity extends Activity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
+                            progressDialog.dismiss();
                             Toast.makeText(SignupActivity.this,"Successfully registered", Toast.LENGTH_LONG).show();
+                            Intent i = new Intent(SignupActivity.this, MenuActivity.class);
+                            startActivity(i);
+
                         }else{
                             FirebaseAuthException e = (FirebaseAuthException)task.getException();
-                            Toast.makeText(SignupActivity.this,"Registration Error"+"   "+e.getMessage(),Toast.LENGTH_LONG).show();
+                            Toast.makeText(SignupActivity.this,e.getMessage(),Toast.LENGTH_LONG).show();
+                            progressDialog.dismiss();
                             return;
                         }
-                        progressDialog.dismiss();
+
                     }
                 });
 
