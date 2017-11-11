@@ -59,6 +59,13 @@ public class MenuActivity extends Activity {
                 chat();
             }
         });
+
+        findViewById(R.id.profileButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                profile();
+            }
+        });
     }
 
     private void logout() {
@@ -80,6 +87,11 @@ public class MenuActivity extends Activity {
 
     private void chat() {
         Intent i = new Intent(this, ChatActivity.class);
+        startActivity(i);
+    }
+
+    private void profile() {
+        Intent i = new Intent(this, MyProfileActivity.class);
         startActivity(i);
     }
 }

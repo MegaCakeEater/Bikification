@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.INTERNET" />
+
     
     <application
         android:name=".ApplicationHelper"
@@ -31,6 +32,7 @@
         <activity android:name=".ChatActivity"></activity>
         <activity android:name=".ShopActivity"></activity>
         <activity android:name=".ForgetPasswordActivity"></activity>
+        <activity android:name=".MyProfileActivity"></activity>
     </application>
 
 </manifest>

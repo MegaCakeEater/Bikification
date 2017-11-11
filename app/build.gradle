@@ -54,5 +54,7 @@ dependencies {
     compile 'com.google.firebase:firebase-auth: 9.6.1'
     compile 'com.firebase:firebase-client-android:2.5.2'
 
+    //Image
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }
 apply plugin: 'com.google.gms.google-services'

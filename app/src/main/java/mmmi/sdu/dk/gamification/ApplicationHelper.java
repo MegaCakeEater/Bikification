@@ -2,6 +2,7 @@ package mmmi.sdu.dk.gamification;
 
 import android.app.Application;
 
+import com.firebase.client.Firebase;
 import com.google.android.gms.location.places.Place;
 
 /**
@@ -26,5 +27,11 @@ public class ApplicationHelper extends Application {
 
       public static Place getPlace2() {
             return place2;
+      }
+
+      @Override
+      public void onCreate() {
+            super.onCreate();
+            Firebase.setAndroidContext(this);
       }
 }

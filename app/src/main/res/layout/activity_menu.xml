@@ -71,6 +71,19 @@
         android:textAllCaps="false" />
 
     <Button
+        android:id="@+id/profileButton"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="5dp"
+        android:alpha="0.75"
+        android:background="#72cd78"
+        android:textColor="#ffffff"
+        android:clickable="true"
+        android:text="My Profile"
+        android:textAllCaps="false" />
+
+    <Button
         android:id="@+id/logout"
         android:layout_width="300dp"
         android:layout_height="40dp"
