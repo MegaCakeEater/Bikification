@@ -33,8 +33,6 @@ public class SearchLocationActivity extends Activity {
 
     private boolean mLocationPermissionGranted;
     private int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION;
-    private int PLACES1_REQUEST = 1;
-    private int PLACES2_REQUEST = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,44 +61,9 @@ public class SearchLocationActivity extends Activity {
         findViewById(R.id.btn_maps).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startMap();
+                        startMap();
             }
-        });
-        AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
-              .setCountry("DK")
-              .build();
-
-        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
-              getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment_a);
-        autocompleteFragment.setFilter(typeFilter);
-
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-               ApplicationHelper.setPlace1(place);
-            }
-
-            @Override
-            public void onError(Status status) {
-                System.out.println(status);
-            }
-        });
-
-        PlaceAutocompleteFragment autocompleteFragment2 = (PlaceAutocompleteFragment)
-              getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment_b);
-        autocompleteFragment2.setFilter(typeFilter);
-
-        autocompleteFragment2.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                ApplicationHelper.setPlace2(place);
-            }
-
-            @Override
-            public void onError(Status status) {
-                System.out.println(status);
-            }
-        });
+    });
     }
 
     @Override

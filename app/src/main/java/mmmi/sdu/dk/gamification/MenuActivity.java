@@ -76,7 +76,7 @@ public class MenuActivity extends Activity {
 
 
     private void search() {
-        Intent i = new Intent(this, SearchLocationActivity.class);
+        Intent i = new Intent(this, MapsActivity.class);
         startActivity(i);
     }
 
