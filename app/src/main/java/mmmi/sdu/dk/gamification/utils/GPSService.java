@@ -98,8 +98,7 @@ public class GPSService implements LocationListener {
       private void checkCollision() {
             ArrayList<Integer> ids = new ArrayList();
             for(Marker m : collectibles) {
-                  if(currentLocation.getLatitude() + pickupRadius >= m.getPosition().latitude && currentLocation.getLatitude() - pickupRadius <= m.getPosition().latitude
-                        && currentLocation.getLongitude() + pickupRadius >= m.getPosition().longitude && currentLocation.getLongitude() - pickupRadius <= m.getPosition().longitude) {
+                  if(calculateEuclideanDistance(currentLocation.getLongitude(), currentLocation.getLatitude(), m.getPosition().longitude, m.getPosition().latitude) <= pickupRadius) {
                         ids.add(collectibles.indexOf(m));
                         m.remove();
                         count++;
@@ -109,5 +108,10 @@ public class GPSService implements LocationListener {
             for(Integer i : ids) {
                   collectibles.remove(i);
             }
+      }
+
+      private double calculateEuclideanDistance(double l1_lng, double l1_lat, double l2_lng, double l2_lat) {
+            double distance = Math.sqrt(Math.pow(l1_lng - l2_lng,2) + Math.pow(l1_lat - l2_lat,2));
+            return distance;
       }
 }
