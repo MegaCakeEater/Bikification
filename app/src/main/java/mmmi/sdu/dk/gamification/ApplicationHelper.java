@@ -11,7 +11,7 @@ import com.google.android.gms.location.places.Place;
  * Created by Bogs on 16-10-2017.
  */
 
-public class ApplicationHelper extends MultiDexApplication {
+public class ApplicationHelper extends Application {
 
       @Override
       public void onCreate() {
