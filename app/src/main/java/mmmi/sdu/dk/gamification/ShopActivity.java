@@ -183,8 +183,10 @@ public class ShopActivity extends Activity {
     private void getAvatar(int number, Button button, TextView price, String url){
 
         //if coin is sufficient and that the user didn't get it yet
-        //int priceInt = Integer.parseInt(String.valueOf(price));
-        //if (coin >= priceInt) {
+        int priceInt = Integer.parseInt(price.getText().toString().trim());
+        int coinInt = Integer.parseInt(coin.getText().toString().trim());
+
+        if (coinInt > priceInt) {
             if (button.getText().toString().equals("Get it!")) {
                 mDatabase = FirebaseDatabase.getInstance().getReference();
                 FirebaseUser userId = FirebaseAuth.getInstance().getCurrentUser();
@@ -194,7 +196,9 @@ public class ShopActivity extends Activity {
                 Intent i = new Intent(this, ShopActivity.class);
                 startActivity(i);
             }
-        //}
+        } else {
+            Toast.makeText(this, "You must have "+(priceInt-coinInt)+"coins more", Toast.LENGTH_LONG).show();
+        }
 
         //If the user want to put it in profile
         if (button.getText().toString().equals("Put in avatar")) {
