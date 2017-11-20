@@ -49,6 +49,7 @@ public class MyProfileActivity extends Activity {
         Typeface disney = Typeface.createFromAsset(getAssets(),"fonts/waltographUI.ttf");
         TextView tx = (TextView)findViewById(R.id.profileTxt);
         tx.setTypeface(disney);
+        final TextView tv_points = (TextView)findViewById(R.id.tv_points);
 
         email = (TextView) findViewById(R.id.mailTxt);
 
@@ -62,6 +63,7 @@ public class MyProfileActivity extends Activity {
             public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
                 url = dataSnapshot.child(uid).child("avatar").child("currentAvatar").getValue(String.class);
                 loadImageFromUrl(url);
+                tv_points.setText(""+dataSnapshot.child(uid).child("points").getValue(Long.class));
             }
 
             @Override

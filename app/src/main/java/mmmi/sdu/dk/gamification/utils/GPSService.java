@@ -1,14 +1,10 @@
 package mmmi.sdu.dk.gamification.utils;
 
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -19,11 +15,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Random;
-
-import mmmi.sdu.dk.gamification.ApplicationHelper;
 
 public class GPSService implements LocationListener {
       private Circle playerCircle;
@@ -32,7 +33,7 @@ public class GPSService implements LocationListener {
       private BitmapDescriptor icon = null;
       private ArrayList<Marker> collectibles;
       private int count = 0;
-      private float pickupRadius = 0.0001f;
+      private float pickupRadius = 0.0005f;
       public GPSService(GoogleMap mMap, BitmapDescriptor icon) {
             this.mMap = mMap;
             collectibles = new ArrayList();
@@ -106,6 +107,27 @@ public class GPSService implements LocationListener {
                   }
             }
             for(Integer i : ids) {
+                  FirebaseUser userId = FirebaseAuth.getInstance().getCurrentUser();
+                  final String uid = userId.getUid();
+                  final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+                  final DatabaseReference counter = mDatabase.child(uid);
+                  counter.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                              if(dataSnapshot.hasChild("points")) {
+                                    long count = (long) dataSnapshot.child("points").getValue();
+                                    counter.child("points").setValue(++count);
+                              } else {
+                                    counter.child("points").setValue(1);
+                              }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                              // throw an error if setValue() is rejected
+                              throw databaseError.toException();
+                        }
+                  });
                   collectibles.remove(i);
             }
       }
