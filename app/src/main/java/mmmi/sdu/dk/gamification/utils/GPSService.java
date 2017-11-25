@@ -54,8 +54,8 @@ public class GPSService implements LocationListener {
                   checkCollision();
                   CircleOptions co = new CircleOptions();
                   co.center(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
-                  co.fillColor(Color.BLUE);
-                  co.strokeColor(Color.BLUE);
+                  co.fillColor(Color.RED);
+                  co.strokeColor(Color.RED);
                   co.radius(2.5);
                   playerCircle = mMap.addCircle(co);
                   LatLng l1 = new LatLng(currentLocation.getLatitude()+0.0005, currentLocation.getLongitude()+0.0005);
@@ -96,6 +96,7 @@ public class GPSService implements LocationListener {
                   collectibles.add(mMap.addMarker(m));
             }
       }
+
       private void checkCollision() {
             ArrayList<Integer> ids = new ArrayList();
             for(Marker m : collectibles) {
@@ -106,6 +107,10 @@ public class GPSService implements LocationListener {
                         System.out.println("GOT COLLECTIBLE # " + count );
                   }
             }
+
+            //We put :
+            //One object collected = 1 point
+            //Coins : 20 coins per object collected
             for(Integer i : ids) {
                   FirebaseUser userId = FirebaseAuth.getInstance().getCurrentUser();
                   final String uid = userId.getUid();
@@ -117,8 +122,14 @@ public class GPSService implements LocationListener {
                               if(dataSnapshot.hasChild("points")) {
                                     long count = (long) dataSnapshot.child("points").getValue();
                                     counter.child("points").setValue(++count);
+
+                                    //Update coins
+                                    counter.child("avatar").child("coins").setValue(++count*20);
+
                               } else {
                                     counter.child("points").setValue(1);
+                                    counter.child("avatar").child("coins").setValue(20);
+
                               }
                         }
 

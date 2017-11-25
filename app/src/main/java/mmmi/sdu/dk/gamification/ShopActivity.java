@@ -28,21 +28,50 @@ public class ShopActivity extends Activity {
     String urlAvatar1;
     String urlAvatar2;
     String urlAvatar3;
-    String url[] = new String[3];
+    String urlAvatar4;
+    String urlAvatar5;
+    String urlAvatar6;
+    String urlAvatar7;
+    String urlAvatar8;
+    String urlAvatar9;
+    String urlAvatar10;
+    String url[] = new String[10];
 
     Button button1;
     Button button2;
     Button button3;
-    Button buttonTab[] = new Button[3];
+    Button button4;
+    Button button5;
+    Button button6;
+    Button button7;
+    Button button8;
+    Button button9;
+    Button button10;
+    Button buttonTab[] = new Button[10];
 
     ImageView imageView1;
     ImageView imageView2;
     ImageView imageView3;
+    ImageView imageView4;
+    ImageView imageView5;
+    ImageView imageView6;
+    ImageView imageView7;
+    ImageView imageView8;
+    ImageView imageView9;
+    ImageView imageView10;
 
     TextView coin;
+    String realCoin;
     TextView priceAvatar1;
     TextView priceAvatar2;
     TextView priceAvatar3;
+    TextView priceAvatar4;
+    TextView priceAvatar5;
+    TextView priceAvatar6;
+    TextView priceAvatar7;
+    TextView priceAvatar8;
+    TextView priceAvatar9;
+    TextView priceAvatar10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +81,9 @@ public class ShopActivity extends Activity {
         Typeface disney = Typeface.createFromAsset(getAssets(),"fonts/waltographUI.ttf");
         TextView tx = (TextView)findViewById(R.id.shopTxt);
         tx.setTypeface(disney);
+
+        FirebaseUser userId = FirebaseAuth.getInstance().getCurrentUser();
+        final String uid = userId.getUid();
 
         //Load the avatar image
         urlAvatar1 = "https://vignette.wikia.nocookie.net/justdance/images/5/5f/Santa_Claus_Avatar.png/revision/latest/scale-to-width-down/480?cb=20151106004619";
@@ -66,51 +98,93 @@ public class ShopActivity extends Activity {
         imageView3 = (ImageView) findViewById(R.id.avatar3);
         loadImageFromUrl(urlAvatar3, imageView3);
 
+        urlAvatar4 = "http://www.freepngimg.com/download/cinderella/7-2-cinderella-png.png";
+        imageView4 = (ImageView) findViewById(R.id.avatar4);
+        loadImageFromUrl(urlAvatar4, imageView4);
+
+        urlAvatar5 = "https://vignette.wikia.nocookie.net/p__/images/a/aa/Flynn_Rider.png/revision/latest/scale-to-width-down/249?cb=20160415201338&path-prefix=protagonist";
+        imageView5 = (ImageView) findViewById(R.id.avatar5);
+        loadImageFromUrl(urlAvatar5, imageView5);
+
+        urlAvatar6 = "http://www.imagenspng.com.br/wp-content/uploads/2015/07/minions-03.png";
+        imageView6 = (ImageView) findViewById(R.id.avatar6);
+        loadImageFromUrl(urlAvatar6, imageView6);
+
+        urlAvatar7 = "http://s1.thingpic.com/images/FZ/BNT6TL6c2YdMp9kHeARDkxNj.png";
+        imageView7 = (ImageView) findViewById(R.id.avatar7);
+        loadImageFromUrl(urlAvatar7, imageView7);
+
+        urlAvatar8 = "https://s-media-cache-ak0.pinimg.com/originals/f6/20/0a/f6200aba407fc4b86b317f61f76e72fb.png";
+        imageView8 = (ImageView) findViewById(R.id.avatar8);
+        loadImageFromUrl(urlAvatar8, imageView8);
+
+        urlAvatar9 = "https://png.icons8.com/sheep-on-bike/office/1600";
+        imageView9 = (ImageView) findViewById(R.id.avatar9);
+        loadImageFromUrl(urlAvatar9, imageView9);
+
+        urlAvatar10 = "https://maxcdn.icons8.com/Share/icon/Animals//running_rabbit1600.png";
+        imageView10 = (ImageView) findViewById(R.id.avatar10);
+        loadImageFromUrl(urlAvatar10, imageView10);
+
         url[0] = urlAvatar1;
         url[1] = urlAvatar2;
         url[2] = urlAvatar3;
+        url[3] = urlAvatar4;
+        url[4] = urlAvatar5;
+        url[5] = urlAvatar6;
+        url[6] = urlAvatar7;
+        url[7] = urlAvatar8;
+        url[8] = urlAvatar9;
+        url[9] = urlAvatar10;
 
         coin = (TextView) findViewById(R.id.coinTxt);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
+                realCoin = dataSnapshot.child(uid).child("avatar").child("coins").getValue(String.class);
+                coin.setText("    " + realCoin);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
+
         priceAvatar1 = (TextView) findViewById(R.id.avatar1Price);
         priceAvatar2 = (TextView) findViewById(R.id.avatar2Price);
         priceAvatar3 = (TextView) findViewById(R.id.avatar3Price);
-
-        //Create the avatars if it doesn't done yet
-        FirebaseUser userId = FirebaseAuth.getInstance().getCurrentUser();
-        final String uid = userId.getUid();
-        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-        rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child(uid).child("avatar").hasChild("avatar1")) {}
-                else {
-                    for (int i=0; i<10; i++) {
-                        mDatabase = FirebaseDatabase.getInstance().getReference();
-                        FirebaseUser userId = FirebaseAuth.getInstance().getCurrentUser();
-                        String uid = userId.getUid();
-                        mDatabase.child(uid).child("avatar").child("avatar"+(i+1)).child("have").setValue("false");
-                        mDatabase.child(uid).child("avatar").child("avatar"+(i+1)).child("buy").setValue("false");
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        priceAvatar4 = (TextView) findViewById(R.id.avatar4Price);
+        priceAvatar5 = (TextView) findViewById(R.id.avatar5Price);
+        priceAvatar6 = (TextView) findViewById(R.id.avatar6Price);
+        priceAvatar7 = (TextView) findViewById(R.id.avatar7Price);
+        priceAvatar8 = (TextView) findViewById(R.id.avatar8Price);
+        priceAvatar9 = (TextView) findViewById(R.id.avatar9Price);
+        priceAvatar10 = (TextView) findViewById(R.id.avatar10Price);
 
         button1 = (Button) findViewById(R.id.buyAvatar1);
         button2 = (Button) findViewById(R.id.buyAvatar2);
         button3 = (Button) findViewById(R.id.buyAvatar3);
+        button4 = (Button) findViewById(R.id.buyAvatar4);
+        button5 = (Button) findViewById(R.id.buyAvatar5);
+        button6 = (Button) findViewById(R.id.buyAvatar6);
+        button7 = (Button) findViewById(R.id.buyAvatar7);
+        button8 = (Button) findViewById(R.id.buyAvatar8);
+        button9 = (Button) findViewById(R.id.buyAvatar9);
+        button10 = (Button) findViewById(R.id.buyAvatar10);
 
         buttonTab[0] = button1;
         buttonTab[1] = button2;
         buttonTab[2] = button3;
-
+        buttonTab[3] = button4;
+        buttonTab[4] = button5;
+        buttonTab[5] = button6;
+        buttonTab[6] = button7;
+        buttonTab[7] = button8;
+        buttonTab[8] = button9;
+        buttonTab[9] = button10;
 
         //Retrieve all the text
-        for (int i=0; i<4; i++) {
+        for (int i=0; i<10; i++) {
             final int counter = i;
             mDatabase = FirebaseDatabase.getInstance().getReference();
             mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -132,7 +206,7 @@ public class ShopActivity extends Activity {
             });
         }
 
-        for (int i=0; i<4; i++) {
+        for (int i=0; i<10; i++) {
             final int counter = i;
             mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -171,6 +245,41 @@ public class ShopActivity extends Activity {
             public void onClick(View v) {getAvatar(3, button3, priceAvatar3, urlAvatar3);
             }
         });
+        findViewById(R.id.buyAvatar4).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {getAvatar(4, button4, priceAvatar4, urlAvatar4);
+            }
+        });
+        findViewById(R.id.buyAvatar5).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {getAvatar(5, button5, priceAvatar5, urlAvatar5);
+            }
+        });
+        findViewById(R.id.buyAvatar6).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {getAvatar(6, button6, priceAvatar6, urlAvatar6);
+            }
+        });
+        findViewById(R.id.buyAvatar7).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {getAvatar(7, button7, priceAvatar7, urlAvatar7);
+            }
+        });
+        findViewById(R.id.buyAvatar8).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {getAvatar(8, button8, priceAvatar8, urlAvatar8);
+            }
+        });
+        findViewById(R.id.buyAvatar9).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {getAvatar(9, button9, priceAvatar9, urlAvatar9);
+            }
+        });
+        findViewById(R.id.buyAvatar10).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {getAvatar(10, button10, priceAvatar10, urlAvatar10);
+            }
+        });
 
         //Redirection home
         findViewById(R.id.homeButton2).setOnClickListener(new View.OnClickListener() {
@@ -186,11 +295,20 @@ public class ShopActivity extends Activity {
         int priceInt = Integer.parseInt(price.getText().toString().trim());
         int coinInt = Integer.parseInt(coin.getText().toString().trim());
 
-        if (coinInt > priceInt) {
+        if (coinInt >= priceInt) {
             if (button.getText().toString().equals("Get it!")) {
+
+
                 mDatabase = FirebaseDatabase.getInstance().getReference();
                 FirebaseUser userId = FirebaseAuth.getInstance().getCurrentUser();
                 String uid = userId.getUid();
+
+                //Take off his coin
+                int newCoin = coinInt - priceInt;
+                String newC = Integer.toString(newCoin);
+                mDatabase.child(uid).child("avatar").child("coins").setValue(newC);
+
+                //Add avatar
                 mDatabase.child(uid).child("avatar").child("avatar" + (number)).child("have").setValue("true");
                 Toast.makeText(this, "Congratulations! You buy the avatar", Toast.LENGTH_LONG).show();
                 Intent i = new Intent(this, ShopActivity.class);
@@ -208,7 +326,7 @@ public class ShopActivity extends Activity {
             String uid = userId.getUid();
 
             //If the user have already an avatar
-            for (int i=0; i<3; i++) {
+            for (int i=0; i<10; i++) {
                 if (buttonTab[i].getText().toString().equals("Current avatar")) {
                     mDatabase.child(uid).child("avatar").child("avatar" + (i+1)).child("buy").setValue("false");
                 }

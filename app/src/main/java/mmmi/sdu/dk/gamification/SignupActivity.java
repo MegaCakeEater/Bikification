@@ -17,8 +17,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +37,7 @@ public class SignupActivity extends Activity {
     private Button buttonSignup;
     private ProgressDialog progressDialog;
     private DatabaseReference mDatabase;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,8 +92,35 @@ public class SignupActivity extends Activity {
                             mDatabase.child(uid).child("user").child("username").setValue(email);
                             mDatabase.child(uid).child("user").child("password").setValue(password);
 
-                            //Create an avatar
+                            //Create coin
+                            mDatabase.child(uid).child("avatar").child("coins").setValue("0");
+
+                            //Create avatars
                             mDatabase.child(uid).child("avatar").child("currentAvatar").setValue("http://enadcity.org/enadcity/wp-content/uploads/2017/02/profile-pictures.png");
+
+
+                            DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+                            rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    final FirebaseUser userId = FirebaseAuth.getInstance().getCurrentUser();
+                                    final String uid = userId.getUid();
+
+                                    if (dataSnapshot.child(uid).child("avatar").hasChild("avatar1")) {}
+                                    else {
+                                        for (int i=0; i<10; i++) {
+                                            mDatabase = FirebaseDatabase.getInstance().getReference();
+                                            mDatabase.child(uid).child("avatar").child("avatar"+(i+1)).child("have").setValue("false");
+                                            mDatabase.child(uid).child("avatar").child("avatar"+(i+1)).child("buy").setValue("false");
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
 
                             progressDialog.dismiss();
                             Toast.makeText(SignupActivity.this,"Successfully registered", Toast.LENGTH_LONG).show();
