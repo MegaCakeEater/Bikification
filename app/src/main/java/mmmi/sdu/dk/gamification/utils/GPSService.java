@@ -22,11 +22,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Random;
 
 public class GPSService implements LocationListener {
+
       private Circle playerCircle;
       private Location currentLocation = null;
       private GoogleMap mMap = null;
@@ -34,6 +36,9 @@ public class GPSService implements LocationListener {
       private ArrayList<Marker> collectibles;
       private int count = 0;
       private float pickupRadius = 0.0005f;
+      private DatabaseReference mDatabase;
+      String url;
+
       public GPSService(GoogleMap mMap, BitmapDescriptor icon) {
             this.mMap = mMap;
             collectibles = new ArrayList();
@@ -52,12 +57,29 @@ public class GPSService implements LocationListener {
                         populate();
                   }
                   checkCollision();
+
+                  //Load the avatar
+                  FirebaseUser userId = FirebaseAuth.getInstance().getCurrentUser();
+                  final String uid = userId.getUid();
+                  mDatabase = FirebaseDatabase.getInstance().getReference();
+                  mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
+                              url = dataSnapshot.child(uid).child("avatar").child("currentAvatar").getValue(String.class);
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {}
+                  });
+
                   CircleOptions co = new CircleOptions();
                   co.center(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
                   co.fillColor(Color.RED);
                   co.strokeColor(Color.RED);
-                  co.radius(2.5);
+                  co.radius(5);
                   playerCircle = mMap.addCircle(co);
+                  
                   LatLng l1 = new LatLng(currentLocation.getLatitude()+0.0005, currentLocation.getLongitude()+0.0005);
                   LatLng l2 = new LatLng(currentLocation.getLatitude()-0.0005, currentLocation.getLongitude()-0.0005);
                   LatLngBounds.Builder builder = new LatLngBounds.Builder();

@@ -142,8 +142,7 @@ public class ShopActivity extends Activity {
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
-                realCoin = dataSnapshot.child(uid).child("avatar").child("coins").getValue(String.class);
-                coin.setText("    " + realCoin);
+                coin.setText("    " + dataSnapshot.child(uid).child("avatar").child("coins").getValue());
             }
 
             @Override
