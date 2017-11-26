@@ -37,8 +37,6 @@ public class MyProfileActivity extends Activity {
     private FirebaseAuth firebaseAuth;
     String url;
     private DatabaseReference mDatabase;
-    private Firebase mrefUser;
-    private Firebase mrefSession;
     private TextView email;
 
     @Override

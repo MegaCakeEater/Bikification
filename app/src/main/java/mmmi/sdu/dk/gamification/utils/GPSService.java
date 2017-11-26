@@ -22,7 +22,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -34,7 +33,7 @@ public class GPSService implements LocationListener {
       private GoogleMap mMap = null;
       private BitmapDescriptor icon = null;
       private ArrayList<Marker> collectibles;
-      private int count = 0;
+
       private float pickupRadius = 0.0005f;
       private DatabaseReference mDatabase;
       String url;
@@ -47,13 +46,16 @@ public class GPSService implements LocationListener {
 
       @Override
       public void onLocationChanged(Location location) {
-            if(location != null) {
+            if (location != null) {
 
-                  if(playerCircle != null) {
+                  if (playerCircle != null) {
                         playerCircle.remove();
                   }
+
                   currentLocation = location;
-                  if(collectibles.size() < 10) {
+
+                  //todo when are collectibles spawned?
+                  if (collectibles.size() < 10) {
                         populate();
                   }
                   checkCollision();
@@ -70,7 +72,8 @@ public class GPSService implements LocationListener {
                         }
 
                         @Override
-                        public void onCancelled(DatabaseError databaseError) {}
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
                   });
 
                   CircleOptions co = new CircleOptions();
@@ -79,9 +82,9 @@ public class GPSService implements LocationListener {
                   co.strokeColor(Color.RED);
                   co.radius(5);
                   playerCircle = mMap.addCircle(co);
-                  
-                  LatLng l1 = new LatLng(currentLocation.getLatitude()+0.0005, currentLocation.getLongitude()+0.0005);
-                  LatLng l2 = new LatLng(currentLocation.getLatitude()-0.0005, currentLocation.getLongitude()-0.0005);
+
+                  LatLng l1 = new LatLng(currentLocation.getLatitude() + 0.0005, currentLocation.getLongitude() + 0.0005);
+                  LatLng l2 = new LatLng(currentLocation.getLatitude() - 0.0005, currentLocation.getLongitude() - 0.0005);
                   LatLngBounds.Builder builder = new LatLngBounds.Builder();
                   builder.include(l1);
                   builder.include(l2);
@@ -106,9 +109,10 @@ public class GPSService implements LocationListener {
 
       }
 
+      //todo how are collectibles spawned?
       private void populate() {
             Random rand = new Random();
-            for(int i = collectibles.size(); i<10; i++) {
+            for (int i = collectibles.size(); i < 10; i++) {
                   float lat = rand.nextFloat() * 0.001f - 0.0005f;
                   float lng = rand.nextFloat() * 0.001f - 0.0005f;
                   MarkerOptions m = new MarkerOptions();
@@ -121,19 +125,17 @@ public class GPSService implements LocationListener {
 
       private void checkCollision() {
             ArrayList<Integer> ids = new ArrayList();
-            for(Marker m : collectibles) {
-                  if(calculateEuclideanDistance(currentLocation.getLongitude(), currentLocation.getLatitude(), m.getPosition().longitude, m.getPosition().latitude) <= pickupRadius) {
+            for (Marker m : collectibles) {
+                  if (calculateEuclideanDistance(currentLocation.getLongitude(), currentLocation.getLatitude(), m.getPosition().longitude, m.getPosition().latitude) <= pickupRadius) {
                         ids.add(collectibles.indexOf(m));
                         m.remove();
-                        count++;
-                        System.out.println("GOT COLLECTIBLE # " + count );
                   }
             }
 
             //We put :
             //One object collected = 1 point
             //Coins : 20 coins per object collected
-            for(Integer i : ids) {
+            for (Integer i : ids) {
                   FirebaseUser userId = FirebaseAuth.getInstance().getCurrentUser();
                   final String uid = userId.getUid();
                   final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -141,12 +143,12 @@ public class GPSService implements LocationListener {
                   counter.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                              if(dataSnapshot.hasChild("points")) {
+                              if (dataSnapshot.hasChild("points")) {
                                     long count = (long) dataSnapshot.child("points").getValue();
                                     counter.child("points").setValue(++count);
 
                                     //Update coins
-                                    counter.child("avatar").child("coins").setValue(++count*20);
+                                    counter.child("avatar").child("coins").setValue(++count * 20);
 
                               } else {
                                     counter.child("points").setValue(1);
@@ -166,7 +168,7 @@ public class GPSService implements LocationListener {
       }
 
       private double calculateEuclideanDistance(double l1_lng, double l1_lat, double l2_lng, double l2_lat) {
-            double distance = Math.sqrt(Math.pow(l1_lng - l2_lng,2) + Math.pow(l1_lat - l2_lat,2));
+            double distance = Math.sqrt(Math.pow(l1_lng - l2_lng, 2) + Math.pow(l1_lat - l2_lat, 2));
             return distance;
       }
 }

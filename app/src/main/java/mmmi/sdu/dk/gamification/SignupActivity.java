@@ -32,9 +32,6 @@ public class SignupActivity extends Activity {
     private FirebaseDatabase firebaseDatabase;
     private EditText editTextEmail;
     private EditText editTextPassword;
-    private EditText editTextFirstname;
-    private EditText editTextLastname;
-    private Button buttonSignup;
     private ProgressDialog progressDialog;
     private DatabaseReference mDatabase;
 
@@ -47,10 +44,6 @@ public class SignupActivity extends Activity {
         firebaseAuth = FirebaseAuth.getInstance();
         editTextEmail = (EditText) findViewById(R.id.userText);
         editTextPassword = (EditText) findViewById(R.id.pwdText);
-        editTextFirstname = (EditText) findViewById(R.id.firstnameText);
-        editTextLastname = (EditText) findViewById(R.id.lastnameText);
-
-        buttonSignup = (Button) findViewById(R.id.loginButton);
 
         progressDialog = new ProgressDialog(this);
         findViewById(R.id.loginButton).setOnClickListener(new View.OnClickListener() {
