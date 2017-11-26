@@ -142,7 +142,7 @@ public class ShopActivity extends Activity {
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
-                coin.setText("    " + dataSnapshot.child(uid).child("avatar").child("coins").getValue());
+                coin.setText("    " + dataSnapshot.child("user").child(uid).child("avatar").child("coins").getValue());
             }
 
             @Override
@@ -189,7 +189,7 @@ public class ShopActivity extends Activity {
             mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
-                    String haveText = dataSnapshot.child(uid).child("avatar").child("avatar"+(counter+1)).child("have").getValue(String.class);
+                    String haveText = dataSnapshot.child("user").child(uid).child("avatar").child("avatar"+(counter+1)).child("have").getValue(String.class);
 
                     if (haveText.equals("true")) {
                         buttonTab[counter].setBackgroundColor(Color.parseColor("#72cd78"));
@@ -210,7 +210,7 @@ public class ShopActivity extends Activity {
             mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
-                    String buyText = dataSnapshot.child(uid).child("avatar").child("avatar" + (counter + 1)).child("buy").getValue(String.class);
+                    String buyText = dataSnapshot.child("user").child(uid).child("avatar").child("avatar" + (counter + 1)).child("buy").getValue(String.class);
 
                     if (buyText.equals("true")) {
                         buttonTab[counter].setBackgroundColor(Color.BLUE);
@@ -305,10 +305,10 @@ public class ShopActivity extends Activity {
                 //Take off his coin
                 int newCoin = coinInt - priceInt;
                 String newC = Integer.toString(newCoin);
-                mDatabase.child(uid).child("avatar").child("coins").setValue(newC);
+                mDatabase.child("user").child(uid).child("avatar").child("coins").setValue(newC);
 
                 //Add avatar
-                mDatabase.child(uid).child("avatar").child("avatar" + (number)).child("have").setValue("true");
+                mDatabase.child("user").child(uid).child("avatar").child("avatar" + (number)).child("have").setValue("true");
                 Toast.makeText(this, "Congratulations! You buy the avatar", Toast.LENGTH_LONG).show();
                 Intent i = new Intent(this, ShopActivity.class);
                 startActivity(i);
@@ -327,12 +327,12 @@ public class ShopActivity extends Activity {
             //If the user have already an avatar
             for (int i=0; i<10; i++) {
                 if (buttonTab[i].getText().toString().equals("Current avatar")) {
-                    mDatabase.child(uid).child("avatar").child("avatar" + (i+1)).child("buy").setValue("false");
+                    mDatabase.child("user").child(uid).child("avatar").child("avatar" + (i+1)).child("buy").setValue("false");
                 }
             }
 
-            mDatabase.child(uid).child("avatar").child("currentAvatar").setValue(url);
-            mDatabase.child(uid).child("avatar").child("avatar" + (number)).child("buy").setValue("true");
+            mDatabase.child("user").child(uid).child("avatar").child("currentAvatar").setValue(url);
+            mDatabase.child("user").child(uid).child("avatar").child("avatar" + (number)).child("buy").setValue("true");
             Toast.makeText(this, "Congratulations! You put this avatar in profile", Toast.LENGTH_LONG).show();
             Intent i = new Intent(this, ShopActivity.class);
             startActivity(i);

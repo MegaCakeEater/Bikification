@@ -61,9 +61,9 @@ public class MyProfileActivity extends Activity {
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
-                url = dataSnapshot.child(uid).child("avatar").child("currentAvatar").getValue(String.class);
+                url = dataSnapshot.child("user").child(uid).child("avatar").child("currentAvatar").getValue(String.class);
                 loadImageFromUrl(url);
-                tv_points.setText(""+dataSnapshot.child(uid).child("points").getValue(Long.class));
+                tv_points.setText(""+dataSnapshot.child("user").child(uid).child("points").getValue(Long.class));
             }
 
             @Override

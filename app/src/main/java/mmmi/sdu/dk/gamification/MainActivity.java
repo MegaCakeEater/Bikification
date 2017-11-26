@@ -36,10 +36,6 @@ public class MainActivity extends Activity {
 
             //Firebase
             firebaseAuth = FirebaseAuth.getInstance();
-            /*if(firebaseAuth.getCurrentUser() != null){
-                  finish();
-                  startActivity(new Intent(getApplicationContext(), MenuActivity.class));
-            }*/
             editTextEmail = (EditText) findViewById(R.id.userText);
             editTextPassword = (EditText) findViewById(R.id.pwdText);
             loginButton = (Button) findViewById(R.id.loginButton);

@@ -65,7 +65,7 @@ public class GPSService implements LocationListener {
                   mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
-                              url = dataSnapshot.child(uid).child("avatar").child("currentAvatar").getValue(String.class);
+                              url = dataSnapshot.child("user").child(uid).child("avatar").child("currentAvatar").getValue(String.class);
 
                         }
 
@@ -137,7 +137,7 @@ public class GPSService implements LocationListener {
                   FirebaseUser userId = FirebaseAuth.getInstance().getCurrentUser();
                   final String uid = userId.getUid();
                   final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-                  final DatabaseReference counter = mDatabase.child(uid);
+                  final DatabaseReference counter = mDatabase.child("user").child(uid);
                   counter.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {

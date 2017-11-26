@@ -89,16 +89,28 @@ public class SignupActivity extends Activity {
                             mDatabase = FirebaseDatabase.getInstance().getReference();
                             FirebaseUser userId = FirebaseAuth.getInstance().getCurrentUser();
                             String uid = userId.getUid();
-                            mDatabase.child(uid).child("user").child("username").setValue(email);
-                            mDatabase.child(uid).child("user").child("password").setValue(password);
+                            mDatabase.child("user").child(uid).child("email").setValue(email);
+                            mDatabase.child("user").child(uid).child("password").setValue(password);
+
+                            //Create name
+                            mDatabase.child("user").child(uid).child("name").setValue(email);
+                            mDatabase.child("user").child(uid).child("avata").setValue("default");
+
+                            //Create message
+                            mDatabase.child("user").child(uid).child("message").child("idReceiver").setValue("0");
+                            mDatabase.child("user").child(uid).child("message").child("idSender").setValue("0");
+                            mDatabase.child("user").child(uid).child("message").child("text").setValue("");
+                            mDatabase.child("user").child(uid).child("message").child("timestamp").setValue(0);
+
+                            //Create status
+                            mDatabase.child("user").child(uid).child("status").child("isOnline").setValue(false);
+                            mDatabase.child("user").child(uid).child("status").child("timestamp").setValue(0);
 
                             //Create coin
-                            mDatabase.child(uid).child("avatar").child("coins").setValue("0");
+                            mDatabase.child("user").child(uid).child("avatar").child("coins").setValue("0");
 
                             //Create avatars
-                            mDatabase.child(uid).child("avatar").child("currentAvatar").setValue("http://enadcity.org/enadcity/wp-content/uploads/2017/02/profile-pictures.png");
-
-
+                            mDatabase.child("user").child(uid).child("avatar").child("currentAvatar").setValue("http://enadcity.org/enadcity/wp-content/uploads/2017/02/profile-pictures.png");
                             DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
                             rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
@@ -106,12 +118,12 @@ public class SignupActivity extends Activity {
                                     final FirebaseUser userId = FirebaseAuth.getInstance().getCurrentUser();
                                     final String uid = userId.getUid();
 
-                                    if (dataSnapshot.child(uid).child("avatar").hasChild("avatar1")) {}
+                                    if (dataSnapshot.child("user").child(uid).child("avatar").hasChild("avatar1")) {}
                                     else {
                                         for (int i=0; i<10; i++) {
                                             mDatabase = FirebaseDatabase.getInstance().getReference();
-                                            mDatabase.child(uid).child("avatar").child("avatar"+(i+1)).child("have").setValue("false");
-                                            mDatabase.child(uid).child("avatar").child("avatar"+(i+1)).child("buy").setValue("false");
+                                            mDatabase.child("user").child(uid).child("avatar").child("avatar"+(i+1)).child("have").setValue("false");
+                                            mDatabase.child("user").child(uid).child("avatar").child("avatar"+(i+1)).child("buy").setValue("false");
                                         }
                                     }
                                 }
