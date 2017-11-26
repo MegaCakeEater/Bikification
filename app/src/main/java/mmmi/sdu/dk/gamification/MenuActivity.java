@@ -86,7 +86,7 @@ public class MenuActivity extends Activity {
     }
 
     private void chat() {
-        Intent i = new Intent(this, ChatActivity.class);
+        Intent i = new Intent(this, ChatMainActivity.class);
         startActivity(i);
     }
 
