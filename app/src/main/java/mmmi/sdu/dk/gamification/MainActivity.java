@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -18,13 +17,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 
-import mmmi.sdu.dk.gamification.R;
-import mmmi.sdu.dk.gamification.SearchLocationActivity;
 
 public class MainActivity extends Activity {
 
       private FirebaseAuth firebaseAuth;
-      private Button loginButton;
       private EditText editTextEmail;
       private EditText editTextPassword;
       private ProgressDialog progressDialog;
@@ -36,13 +32,10 @@ public class MainActivity extends Activity {
 
             //Firebase
             firebaseAuth = FirebaseAuth.getInstance();
-            /*if(firebaseAuth.getCurrentUser() != null){
-                  finish();
-                  startActivity(new Intent(getApplicationContext(), MenuActivity.class));
-            }*/
+
             editTextEmail = (EditText) findViewById(R.id.userText);
             editTextPassword = (EditText) findViewById(R.id.pwdText);
-            loginButton = (Button) findViewById(R.id.loginButton);
+            Button loginButton = (Button) findViewById(R.id.loginButton);
             progressDialog = new ProgressDialog(this);
 
             //Redirection
