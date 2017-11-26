@@ -32,10 +32,6 @@ public class MainActivity extends Activity {
 
             //Firebase
             firebaseAuth = FirebaseAuth.getInstance();
-<<<<<<< HEAD
-=======
-
->>>>>>> 1389bc9d63c53d303a739aa9722383ed86768294
             editTextEmail = (EditText) findViewById(R.id.userText);
             editTextPassword = (EditText) findViewById(R.id.pwdText);
             Button loginButton = (Button) findViewById(R.id.loginButton);
