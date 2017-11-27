@@ -35,6 +35,7 @@ import mmmi.sdu.dk.gamification.model.Consersation;
 import mmmi.sdu.dk.gamification.model.Message;
 
 
+//Send and receive message
 public class ChatActivity extends AppCompatActivity implements View.OnClickListener {
     private RecyclerView recyclerChat;
     public static final int VIEW_TYPE_USER_MESSAGE = 0;
@@ -63,7 +64,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         btnSend = (ImageButton) findViewById(R.id.btnSend);
         btnSend.setOnClickListener(this);
 
-        //avatar
         String base64AvataUser = SharedPreferenceHelper.getInstance(this).getUserInfo().avata;
         if (!base64AvataUser.equals(StaticConfig.STR_DEFAULT_BASE64)) {
             byte[] decodedString = Base64.decode(base64AvataUser, Base64.DEFAULT);
@@ -199,6 +199,8 @@ class ListMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot.getValue() != null) {
                                 String avataStr = (String) dataSnapshot.getValue();
+
+                                //AVATAR
                                 if(!avataStr.equals(StaticConfig.STR_DEFAULT_BASE64)) {
                                     byte[] decodedString = Base64.decode(avataStr, Base64.DEFAULT);
                                     ChatActivity.bitmapAvataFriend.put(id, BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));

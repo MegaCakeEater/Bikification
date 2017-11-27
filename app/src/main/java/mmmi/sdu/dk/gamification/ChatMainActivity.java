@@ -34,7 +34,6 @@ public class ChatMainActivity extends AppCompatActivity {
     private TabLayout tabLayout = null;
     public static String STR_FRIEND_FRAGMENT = "FRIEND";
     public static String STR_GROUP_FRAGMENT = "GROUP";
-    //public static String STR_INFO_FRAGMENT = "INFO";
 
     private FloatingActionButton floatButton;
     private ViewPagerAdapter adapter;
@@ -51,7 +50,6 @@ public class ChatMainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if(toolbar != null) {
             setSupportActionBar(toolbar);
-            //getSupportActionBar().setTitle("Chat");
         }
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -70,11 +68,9 @@ public class ChatMainActivity extends AppCompatActivity {
                     StaticConfig.UID = user.getUid();
                 } else {
                     ChatMainActivity.this.finish();
-                    // User is signed in
                     startActivity(new Intent(ChatMainActivity.this, LoginActivity.class));
                     Log.d(TAG, "onAuthStateChanged:signed_out");
                 }
-                // ...
             }
         };
     }
@@ -101,9 +97,6 @@ public class ChatMainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    /**
-     * Khoi tao 3 tab
-     */
     private void initTab() {
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.colorIndivateTab));
@@ -122,14 +115,12 @@ public class ChatMainActivity extends AppCompatActivity {
 
         tabLayout.getTabAt(0).setIcon(tabIcons[0]);
         tabLayout.getTabAt(1).setIcon(tabIcons[1]);
-        //tabLayout.getTabAt(2).setIcon(tabIcons[2]);
     }
 
     private void setupViewPager(ViewPager viewPager) {
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new FriendsFragment(), STR_FRIEND_FRAGMENT);
         adapter.addFrag(new GroupFragment(), STR_GROUP_FRAGMENT);
-        //adapter.addFrag(new UserProfileFragment(), STR_INFO_FRAGMENT);
         floatButton.setOnClickListener(((FriendsFragment) adapter.getItem(0)).onClickFloatButton.getInstance(this));
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(2);
@@ -162,47 +153,18 @@ public class ChatMainActivity extends AppCompatActivity {
         });
     }
 
-    //    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == REQUEST_CODE_LOGIN && resultCode == RESULT_OK) {
-//            if (data.getStringExtra(STR_EXTRA_ACTION).equals(LoginActivity.STR_EXTRA_ACTION_LOGIN)) {
-//                authUtils.signIn(data.getStringExtra(STR_EXTRA_USERNAME), data.getStringExtra(STR_EXTRA_PASSWORD));
-//            } else if (data.getStringExtra(STR_EXTRA_ACTION).equals(RegisterActivity.STR_EXTRA_ACTION_REGISTER)) {
-//                authUtils.createUser(data.getStringExtra(STR_EXTRA_USERNAME), data.getStringExtra(STR_EXTRA_PASSWORD));
-//            }else if(data.getStringExtra(STR_EXTRA_ACTION).equals(LoginActivity.STR_EXTRA_ACTION_RESET)){
-//                authUtils.resetPassword(data.getStringExtra(STR_EXTRA_USERNAME));
-//            }
-//        } else if (resultCode == RESULT_CANCELED) {
-//            this.finish();
-//        }
-//    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        /*if (id == R.id.about) {
-            Toast.makeText(this, "Rivchat version 1.0", Toast.LENGTH_LONG).show();
-            return true;
-        }*/
-
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * Adapter hien thi tab
-     */
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
@@ -228,8 +190,6 @@ public class ChatMainActivity extends AppCompatActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
-
-            // return null to display only the icon
             return null;
         }
     }

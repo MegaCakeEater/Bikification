@@ -133,12 +133,10 @@ public class AddGroupActivity extends AppCompatActivity {
     }
 
     private void editGroup() {
-        //Show dialog wait
         dialogWait.setIcon(R.drawable.ic_add_group_dialog)
                 .setTitle("Editing....")
                 .setTopColorRes(R.color.colorPrimary)
                 .show();
-        //Delete group
         final String idGroup = groupEdit.id;
         Room room = new Room();
         for (String id : listIDChoose) {
@@ -323,12 +321,14 @@ class ListPeopleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         ((ItemFriendHolder) holder).txtEmail.setText(listFriend.getListFriend().get(position).email);
         String avata = listFriend.getListFriend().get(position).avata;
         final String id = listFriend.getListFriend().get(position).id;
-        if (!avata.equals(StaticConfig.STR_DEFAULT_BASE64)) {
+
+        //AVATAR!!!
+        /*if (!avata.equals(StaticConfig.STR_DEFAULT_BASE64)) {
             byte[] decodedString = Base64.decode(avata, Base64.DEFAULT);
             ((ItemFriendHolder) holder).avata.setImageBitmap(BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));
         }else{
             ((ItemFriendHolder) holder).avata.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.default_avata));
-        }
+        }*/
         ((ItemFriendHolder) holder).checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {

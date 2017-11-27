@@ -39,7 +39,6 @@ import mmmi.sdu.dk.gamification.model.ListFriend;
 
 public class FriendChatService extends Service {
     private static String TAG = "FriendChatService";
-    // Binder given to clients
     public final IBinder mBinder = new LocalBinder();
     public Map<String, Boolean> mapMark;
     public Map<String, Query> mapQuery;
@@ -78,7 +77,6 @@ public class FriendChatService extends Service {
         updateOnline.start();
 
         if (listFriend.getListFriend().size() > 0 || listGroup.size() > 0) {
-            //Dang ky lang nghe cac room tai day
             for (final Friend friend : listFriend.getListFriend()) {
                 if (!listKey.contains(friend.idRoom)) {
                     mapQuery.put(friend.idRoom, FirebaseDatabase.getInstance().getReference().child("message/" + friend.idRoom).limitToLast(1));
@@ -86,12 +84,13 @@ public class FriendChatService extends Service {
                         @Override
                         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                             if (mapMark.get(friend.idRoom) != null && mapMark.get(friend.idRoom)) {
-//                                Toast.makeText(FriendChatService.this, friend.name + ": " + ((HashMap)dataSnapshot.getValue()).get("text"), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(FriendChatService.this, friend.name + ": " + ((HashMap)dataSnapshot.getValue()).get("text"), Toast.LENGTH_SHORT).show();
                                 if (mapBitmap.get(friend.idRoom) == null) {
                                     if (!friend.avata.equals(StaticConfig.STR_DEFAULT_BASE64)) {
                                         byte[] decodedString = Base64.decode(friend.avata, Base64.DEFAULT);
                                         mapBitmap.put(friend.idRoom, BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));
                                     } else {
+                                        //AVATAR
                                         mapBitmap.put(friend.idRoom, BitmapFactory.decodeResource(getResources(), R.drawable.default_avata));
                                     }
                                 }
