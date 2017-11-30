@@ -26,7 +26,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
       private String locationProvider  = LocationManager.GPS_PROVIDER;
       private LocationManager mLocationManager = null;
       private int updateTime = 1000 * 5;
-      private int updateDistance = 1;
+      private int updateDistance = 5;
 
       @Override
       protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +44,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap = googleMap;
             mMap.getUiSettings().setMapToolbarEnabled(false);
             BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.pumpkin_icon);
-            mLocationManager.requestLocationUpdates(locationProvider,updateTime, updateDistance, new GPSService(mMap, icon));
+            mLocationManager.requestLocationUpdates(locationProvider,updateTime, updateDistance, new GPSService(mMap, icon, getApplicationContext()));
       }
 
 }

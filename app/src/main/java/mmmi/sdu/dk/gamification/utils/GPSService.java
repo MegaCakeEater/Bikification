@@ -1,14 +1,17 @@
 package mmmi.sdu.dk.gamification.utils;
 
 
+import android.content.Context;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
@@ -22,66 +25,71 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class GPSService implements LocationListener {
 
-      private Circle playerCircle;
+      private Marker player;
       private Location currentLocation = null;
       private GoogleMap mMap = null;
       private BitmapDescriptor icon = null;
+      private BitmapDescriptor playerAvatar;
       private ArrayList<Marker> collectibles;
+      private Context context;
 
-      private float pickupRadius = 0.0005f;
+      private float pickupRadius = 0.00001f;
       private DatabaseReference mDatabase;
-      String url;
+      private String url;
 
-      public GPSService(GoogleMap mMap, BitmapDescriptor icon) {
+      public GPSService(GoogleMap mMap, BitmapDescriptor icon, Context context) {
             this.mMap = mMap;
             collectibles = new ArrayList();
             this.icon = icon;
+            this.context = context;
       }
 
       @Override
       public void onLocationChanged(Location location) {
             if (location != null) {
 
-                  if (playerCircle != null) {
-                        playerCircle.remove();
+                  if (player == null) {
+                        FirebaseUser userId = FirebaseAuth.getInstance().getCurrentUser();
+                        final String uid = userId.getUid();
+                        mDatabase = FirebaseDatabase.getInstance().getReference();
+                        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                              @Override
+                              public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
+                                    url = dataSnapshot.child("user").child(uid).child("avatar").child("currentAvatar").getValue(String.class);
+
+                              }
+
+                              @Override
+                              public void onCancelled(DatabaseError databaseError) {
+                              }
+                        });
+                        try {
+                              playerAvatar = BitmapDescriptorFactory.fromBitmap(Picasso.with(context).load(url).resize(100,100).get());//.into(playerAvatar, new com.squareup.picasso.Callback() {
+                        } catch (IOException e) {
+                              e.printStackTrace();
+                        }
+                        MarkerOptions mo = new MarkerOptions();
+                        mo.icon(playerAvatar);
+                        mo.position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
+                        player = mMap.addMarker(mo);
                   }
 
                   currentLocation = location;
+
 
                   //todo when are collectibles spawned?
                   if (collectibles.size() < 10) {
                         populate();
                   }
                   checkCollision();
-
-                  //Load the avatar
-                  FirebaseUser userId = FirebaseAuth.getInstance().getCurrentUser();
-                  final String uid = userId.getUid();
-                  mDatabase = FirebaseDatabase.getInstance().getReference();
-                  mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
-                              url = dataSnapshot.child("user").child(uid).child("avatar").child("currentAvatar").getValue(String.class);
-
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                        }
-                  });
-
-                  CircleOptions co = new CircleOptions();
-                  co.center(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
-                  co.fillColor(Color.RED);
-                  co.strokeColor(Color.RED);
-                  co.radius(5);
-                  playerCircle = mMap.addCircle(co);
 
                   LatLng l1 = new LatLng(currentLocation.getLatitude() + 0.0005, currentLocation.getLongitude() + 0.0005);
                   LatLng l2 = new LatLng(currentLocation.getLatitude() - 0.0005, currentLocation.getLongitude() - 0.0005);
@@ -127,6 +135,7 @@ public class GPSService implements LocationListener {
             ArrayList<Integer> ids = new ArrayList();
             for (Marker m : collectibles) {
                   if (calculateEuclideanDistance(currentLocation.getLongitude(), currentLocation.getLatitude(), m.getPosition().longitude, m.getPosition().latitude) <= pickupRadius) {
+                        Toast.makeText(context,"Collectible get!", Toast.LENGTH_SHORT);
                         ids.add(collectibles.indexOf(m));
                         m.remove();
                   }
