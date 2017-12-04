@@ -25,8 +25,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
       private GoogleMap mMap;
       private String locationProvider  = LocationManager.GPS_PROVIDER;
       private LocationManager mLocationManager = null;
-      private int updateTime = 1000 * 5;
-      private int updateDistance = 5;
+      private int updateTime = 1000 * 1;
+      private int updateDistance = 1;
 
       @Override
       protected void onCreate(Bundle savedInstanceState) {

@@ -2,7 +2,9 @@ package mmmi.sdu.dk.gamification.utils;
 
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
@@ -26,10 +28,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
+
+import mmmi.sdu.dk.gamification.R;
 
 public class GPSService implements LocationListener {
 
@@ -40,8 +45,24 @@ public class GPSService implements LocationListener {
       private BitmapDescriptor playerAvatar;
       private ArrayList<Marker> collectibles;
       private Context context;
+      private boolean loadingAvatar = false;
+      private Target target = new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                  playerAvatar = BitmapDescriptorFactory.fromBitmap(bitmap);
+                        player.setIcon(playerAvatar);
+            }
 
-      private float pickupRadius = 0.00001f;
+            @Override
+            public void onBitmapFailed(Drawable errorDrawable) {
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+            }
+      };
+
+      private float pickupRadius = 0.0001f;
       private DatabaseReference mDatabase;
       private String url;
 
@@ -55,42 +76,48 @@ public class GPSService implements LocationListener {
       @Override
       public void onLocationChanged(Location location) {
             if (location != null) {
+                  currentLocation = location;
 
-                  if (player == null) {
+                  if (player == null || !loadingAvatar) {
                         FirebaseUser userId = FirebaseAuth.getInstance().getCurrentUser();
                         final String uid = userId.getUid();
                         mDatabase = FirebaseDatabase.getInstance().getReference();
-                        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                              @Override
-                              public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
-                                    url = dataSnapshot.child("user").child(uid).child("avatar").child("currentAvatar").getValue(String.class);
+                        if(!loadingAvatar) {
+                              mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
+                                          url = dataSnapshot.child("user").child(uid).child("avatar").child("currentAvatar").getValue(String.class);
+                                          System.out.println(url);
 
-                              }
+                                    }
 
-                              @Override
-                              public void onCancelled(DatabaseError databaseError) {
-                              }
-                        });
-                        try {
-                              playerAvatar = BitmapDescriptorFactory.fromBitmap(Picasso.with(context).load(url).resize(100,100).get());//.into(playerAvatar, new com.squareup.picasso.Callback() {
-                        } catch (IOException e) {
-                              e.printStackTrace();
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                    }
+                              });
                         }
-                        MarkerOptions mo = new MarkerOptions();
-                        mo.icon(playerAvatar);
-                        mo.position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
-                        player = mMap.addMarker(mo);
+                        if(url == null) {
+                              playerAvatar = BitmapDescriptorFactory.fromResource(R.drawable.bike);
+                        } else if(url != null && !loadingAvatar) {
+                              Picasso.with(context).load(url).resize(96,96).into(target);
+                              loadingAvatar = true;
+                        }
+                        if(playerAvatar != null && player == null) {
+                              MarkerOptions mo = new MarkerOptions();
+                              mo.icon(playerAvatar);
+                              mo.position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
+                              player = mMap.addMarker(mo);
+                        }
                   }
-
-                  currentLocation = location;
-
 
                   //todo when are collectibles spawned?
                   if (collectibles.size() < 10) {
                         populate();
                   }
                   checkCollision();
-
+                  if(player != null) {
+                        player.setPosition(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
+                  }
                   LatLng l1 = new LatLng(currentLocation.getLatitude() + 0.0005, currentLocation.getLongitude() + 0.0005);
                   LatLng l2 = new LatLng(currentLocation.getLatitude() - 0.0005, currentLocation.getLongitude() - 0.0005);
                   LatLngBounds.Builder builder = new LatLngBounds.Builder();
