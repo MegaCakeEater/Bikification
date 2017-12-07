@@ -1,8 +1,6 @@
 package mmmi.sdu.dk.gamification.Adapters;
 
-import android.graphics.Bitmap;
-
-import java.net.URL;
+import mmmi.sdu.dk.gamification.model.Avatar;
 
 /**
  * Created by Bogs on 26-11-2017.
@@ -11,35 +9,32 @@ import java.net.URL;
 public class AvatarItem {
 
 
-      private String name;
-      private int price;
+      private Avatar avatar;
       private boolean owned;
-      private String imageUrl;
 
-      public AvatarItem(String name, int price, boolean owned, String imageUrl) {
-            this.name = name;
-            this.price = price;
+      public AvatarItem(Avatar avatar, boolean owned) {
+            this.avatar = avatar;
             this.owned = owned;
-            this.imageUrl = imageUrl;
       }
 
       public String getName() {
-            return name;
+            return this.avatar.getName();
       }
 
       public int getPrice() {
-            return price;
+            return this.avatar.getPrice();
       }
 
       public boolean isOwned() {
-            return owned;
-      }
-      public String getImageUrl() {
-            return  this.imageUrl;
+            return this.owned;
       }
 
       public void setOwned(boolean owned) {
             this.owned = owned;
+      }
+
+      public String getImageUrl() {
+            return this.avatar.getImageUrl();
       }
 
 }

@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import mmmi.sdu.dk.gamification.utils.DatabaseFacade;
+
 public class MenuActivity extends Activity {
 
     private FirebaseAuth firebaseAuth;
@@ -18,7 +20,7 @@ public class MenuActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-
+        DatabaseFacade.getInstance().loadUser();
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser user = firebaseAuth.getCurrentUser();
         Typeface disney = Typeface.createFromAsset(getAssets(),"fonts/waltographUI.ttf");

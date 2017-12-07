@@ -3,7 +3,6 @@ package mmmi.sdu.dk.gamification.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
@@ -14,27 +13,19 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
 import mmmi.sdu.dk.gamification.R;
+import mmmi.sdu.dk.gamification.model.Avatar;
+import mmmi.sdu.dk.gamification.model.User;
 
 public class GPSService implements LocationListener {
 
@@ -46,6 +37,7 @@ public class GPSService implements LocationListener {
       private ArrayList<Marker> collectibles;
       private Context context;
       private boolean loadingAvatar = false;
+      private boolean loadingBitmap = false;
       private Target target = new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -62,9 +54,9 @@ public class GPSService implements LocationListener {
             }
       };
 
-      private float pickupRadius = 0.0001f;
-      private DatabaseReference mDatabase;
-      private String url;
+      private float pickupRadius = 0.0002f;
+      private Avatar avatar;
+      private User user;
 
       public GPSService(GoogleMap mMap, BitmapDescriptor icon, Context context) {
             this.mMap = mMap;
@@ -79,28 +71,18 @@ public class GPSService implements LocationListener {
                   currentLocation = location;
 
                   if (player == null || !loadingAvatar) {
-                        FirebaseUser userId = FirebaseAuth.getInstance().getCurrentUser();
-                        final String uid = userId.getUid();
-                        mDatabase = FirebaseDatabase.getInstance().getReference();
-                        if(!loadingAvatar) {
-                              mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
-                                          url = dataSnapshot.child("user").child(uid).child("avatar").child("currentAvatar").getValue(String.class);
-                                          System.out.println(url);
-
-                                    }
-
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-                                    }
-                              });
+                        if (DatabaseFacade.getInstance().getUser() != null) {
+                              user = DatabaseFacade.getInstance().getUser();
                         }
-                        if(url == null) {
+                        if (avatar == null) {
                               playerAvatar = BitmapDescriptorFactory.fromResource(R.drawable.bike);
-                        } else if(url != null && !loadingAvatar) {
-                              Picasso.with(context).load(url).resize(96,96).into(target);
-                              loadingAvatar = true;
+                        }
+                        if (DatabaseFacade.getInstance().getAvatars().get(user.getCurrentAvatar()) != null) {
+                              avatar = DatabaseFacade.getInstance().getAvatars().get(user.getCurrentAvatar());
+                        }
+                        if (!loadingBitmap && avatar != null) {
+                              Picasso.with(context).load(avatar.getImageUrl()).resize(96, 96).into(target);
+                              loadingBitmap = true;
                         }
                         if(playerAvatar != null && player == null) {
                               MarkerOptions mo = new MarkerOptions();
@@ -172,34 +154,12 @@ public class GPSService implements LocationListener {
             //One object collected = 1 point
             //Coins : 20 coins per object collected
             for (Integer i : ids) {
-                  FirebaseUser userId = FirebaseAuth.getInstance().getCurrentUser();
-                  final String uid = userId.getUid();
-                  final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-                  final DatabaseReference counter = mDatabase.child("user").child(uid);
-                  counter.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                              if (dataSnapshot.hasChild("points")) {
-                                    long count = (long) dataSnapshot.child("points").getValue();
-                                    counter.child("points").setValue(++count);
-
-                                    //Update coins
-                                    counter.child("avatar").child("coins").setValue(++count * 20);
-
-                              } else {
-                                    counter.child("points").setValue(1);
-                                    counter.child("avatar").child("coins").setValue(20);
-
-                              }
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                              // throw an error if setValue() is rejected
-                              throw databaseError.toException();
-                        }
-                  });
-                  collectibles.remove(i);
+                  if (user != null) {
+                        user.setPoints(user.getPoints() + 1);
+                        user.setCoins(user.getCoins() + 20);
+                        DatabaseFacade.getInstance().updateUser(user);
+                        collectibles.remove(i);
+                  }
             }
       }
 

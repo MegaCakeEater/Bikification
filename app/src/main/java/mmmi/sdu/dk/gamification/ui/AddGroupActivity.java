@@ -2,7 +2,6 @@ package mmmi.sdu.dk.gamification.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -319,15 +317,15 @@ class ListPeopleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         ((ItemFriendHolder) holder).txtName.setText(listFriend.getListFriend().get(position).name);
         ((ItemFriendHolder) holder).txtEmail.setText(listFriend.getListFriend().get(position).email);
-        String avata = listFriend.getListFriend().get(position).avata;
+          String avata = listFriend.getListFriend().get(position).currentAvatar;
         final String id = listFriend.getListFriend().get(position).id;
 
         //AVATAR!!!
-        /*if (!avata.equals(StaticConfig.STR_DEFAULT_BASE64)) {
-            byte[] decodedString = Base64.decode(avata, Base64.DEFAULT);
-            ((ItemFriendHolder) holder).avata.setImageBitmap(BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));
+        /*if (!currentAvatar.equals(StaticConfig.STR_DEFAULT_BASE64)) {
+            byte[] decodedString = Base64.decode(currentAvatar, Base64.DEFAULT);
+            ((ItemFriendHolder) holder).currentAvatar.setImageBitmap(BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));
         }else{
-            ((ItemFriendHolder) holder).avata.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.default_avata));
+            ((ItemFriendHolder) holder).currentAvatar.setImageBitmap(BitmapFactory.decodeResource(context.getResources(), R.drawable.default_avata));
         }*/
         ((ItemFriendHolder) holder).checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

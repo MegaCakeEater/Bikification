@@ -11,14 +11,24 @@ import mmmi.sdu.dk.gamification.model.Friend;
 import mmmi.sdu.dk.gamification.model.ListFriend;
 
 public final class FriendDB {
+      private static final String TEXT_TYPE = " TEXT";
+      private static final String COMMA_SEP = ",";
+      private static final String SQL_CREATE_ENTRIES =
+            "CREATE TABLE " + FeedEntry.TABLE_NAME + " (" +
+                  FeedEntry.COLUMN_NAME_ID + " TEXT PRIMARY KEY," +
+                  FeedEntry.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
+                  FeedEntry.COLUMN_NAME_EMAIL + TEXT_TYPE + COMMA_SEP +
+                  FeedEntry.COLUMN_NAME_ID_ROOM + TEXT_TYPE + COMMA_SEP +
+                  FeedEntry.COLUMN_NAME_AVATA + TEXT_TYPE + " )";
+      private static final String SQL_DELETE_ENTRIES =
+            "DROP TABLE IF EXISTS " + FeedEntry.TABLE_NAME;
     private static FriendDBHelper mDbHelper = null;
+      private static FriendDB instance = null;
 
     // To prevent someone from accidentally instantiating the contract class,
     // make the constructor private.
     private FriendDB() {
     }
-
-    private static FriendDB instance = null;
 
     public static FriendDB getInstance(Context context) {
         if (instance == null) {
@@ -28,7 +38,6 @@ public final class FriendDB {
         return instance;
     }
 
-
     public long addFriend(Friend friend) {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         // Create a new map of values, where column names are the keys
@@ -37,11 +46,10 @@ public final class FriendDB {
         values.put(FeedEntry.COLUMN_NAME_NAME, friend.name);
         values.put(FeedEntry.COLUMN_NAME_EMAIL, friend.email);
         values.put(FeedEntry.COLUMN_NAME_ID_ROOM, friend.idRoom);
-        values.put(FeedEntry.COLUMN_NAME_AVATA, friend.avata);
+          values.put(FeedEntry.COLUMN_NAME_AVATA, friend.currentAvatar);
         // Insert the new row, returning the primary key value of the new row
         return db.insert(FeedEntry.TABLE_NAME, null, values);
     }
-
 
     public void addListFriend(ListFriend listFriend){
         for(Friend friend: listFriend.getListFriend()){
@@ -62,7 +70,7 @@ public final class FriendDB {
                 friend.name = cursor.getString(1);
                 friend.email = cursor.getString(2);
                 friend.idRoom = cursor.getString(3);
-                friend.avata = cursor.getString(4);
+                  friend.currentAvatar = cursor.getString(4);
                 listFriend.getListFriend().add(friend);
             }
             cursor.close();
@@ -85,22 +93,8 @@ public final class FriendDB {
         static final String COLUMN_NAME_NAME = "name";
         static final String COLUMN_NAME_EMAIL = "email";
         static final String COLUMN_NAME_ID_ROOM = "idRoom";
-        static final String COLUMN_NAME_AVATA = "avata";
+          static final String COLUMN_NAME_AVATA = "currentAvatar";
     }
-
-    private static final String TEXT_TYPE = " TEXT";
-    private static final String COMMA_SEP = ",";
-    private static final String SQL_CREATE_ENTRIES =
-            "CREATE TABLE " + FeedEntry.TABLE_NAME + " (" +
-                    FeedEntry.COLUMN_NAME_ID + " TEXT PRIMARY KEY," +
-                    FeedEntry.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
-                    FeedEntry.COLUMN_NAME_EMAIL + TEXT_TYPE + COMMA_SEP +
-                    FeedEntry.COLUMN_NAME_ID_ROOM + TEXT_TYPE + COMMA_SEP +
-                    FeedEntry.COLUMN_NAME_AVATA + TEXT_TYPE + " )";
-
-    private static final String SQL_DELETE_ENTRIES =
-            "DROP TABLE IF EXISTS " + FeedEntry.TABLE_NAME;
-
 
     private static class FriendDBHelper extends SQLiteOpenHelper {
         // If you change the database schema, you must increment the database version.

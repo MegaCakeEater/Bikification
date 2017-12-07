@@ -57,18 +57,16 @@ import mmmi.sdu.dk.gamification.service.ServiceUtils;
 
 public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
+      public static final String ACTION_DELETE_FRIEND = "com.android.rivchat.DELETE_FRIEND";
+      public static int ACTION_START_CHAT = 1;
+      public FragFriendClickFloatButton onClickFloatButton;
     private RecyclerView recyclerListFrends;
     private ListFriendsAdapter adapter;
-    public FragFriendClickFloatButton onClickFloatButton;
     private ListFriend dataListFriend = null;
     private ArrayList<String> listFriendID = null;
     private LovelyProgressDialog dialogFindAllFriend;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private CountDownTimer detectFriendOnline;
-    public static int ACTION_START_CHAT = 1;
-
-    public static final String ACTION_DELETE_FRIEND = "com.android.rivchat.DELETE_FRIEND";
-
     private BroadcastReceiver deleteFriendReceiver;
 
     public FriendsFragment() {
@@ -170,6 +168,69 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
         getListFriendUId();
     }
 
+      /**
+       * Lay danh sach ban be tren server
+       */
+      private void getListFriendUId() {
+            FirebaseDatabase.getInstance().getReference().child("friend/" + StaticConfig.UID).addListenerForSingleValueEvent(new ValueEventListener() {
+                  @Override
+                  public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getValue() != null) {
+                              HashMap mapRecord = (HashMap) dataSnapshot.getValue();
+                              Iterator listKey = mapRecord.keySet().iterator();
+                              while (listKey.hasNext()) {
+                                    String key = listKey.next().toString();
+                                    listFriendID.add(mapRecord.get(key).toString());
+                              }
+                              getAllFriendInfo(0);
+                        } else {
+                              dialogFindAllFriend.dismiss();
+                        }
+                  }
+
+                  @Override
+                  public void onCancelled(DatabaseError databaseError) {
+                  }
+            });
+      }
+
+      /**
+       * Truy cap bang user lay thong tin id nguoi dung
+       */
+      private void getAllFriendInfo(final int index) {
+            if (index == listFriendID.size()) {
+                  //save list friend
+                  adapter.notifyDataSetChanged();
+                  dialogFindAllFriend.dismiss();
+                  mSwipeRefreshLayout.setRefreshing(false);
+                  detectFriendOnline.start();
+            } else {
+                  final String id = listFriendID.get(index);
+                  FirebaseDatabase.getInstance().getReference().child("user/" + id).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                              if (dataSnapshot.getValue() != null) {
+                                    Friend user = new Friend();
+                                    HashMap mapUserInfo = (HashMap) dataSnapshot.getValue();
+                                    user.name = (String) mapUserInfo.get("name");
+                                    user.email = (String) mapUserInfo.get("email");
+                                    user.currentAvatar = (String) mapUserInfo.get("currentAvatar");
+                                    user.id = id;
+                                    user.idRoom = id.compareTo(StaticConfig.UID) > 0 ? (StaticConfig.UID + id).hashCode() + "" : "" + (id + StaticConfig.UID).hashCode();
+                                    dataListFriend.getListFriend().add(user);
+                                    FriendDB.getInstance(getContext()).addFriend(user);
+                              }
+                              getAllFriendInfo(index + 1);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                  });
+            }
+      }
+
     public class FragFriendClickFloatButton implements View.OnClickListener {
         Context context;
         LovelyProgressDialog dialogWait;
@@ -249,7 +310,7 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             Friend user = new Friend();
                             user.name = (String) userMap.get("name");
                             user.email = (String) userMap.get("email");
-                            user.avata = (String) userMap.get("avata");
+                              user.currentAvatar = (String) userMap.get("currentAvatar");
                             user.id = id;
                             user.idRoom = id.compareTo(StaticConfig.UID) > 0 ? (StaticConfig.UID + id).hashCode() + "" : "" + (id + StaticConfig.UID).hashCode();
                             checkBeforAddFriend(id, user);
@@ -281,7 +342,7 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         .setTopColorRes(R.color.colorPrimary)
                         .setIcon(R.drawable.ic_add_friend)
                         .setTitle("Friend")
-                        .setMessage("User "+userInfo.email + " has been friend")
+                      .setMessage("ChatUser " + userInfo.email + " has been friend")
                         .show();
             } else {
                 addFriend(idFriend, true);
@@ -356,82 +417,19 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
 
     }
-
-    /**
-     * Lay danh sach ban be tren server
-     */
-    private void getListFriendUId() {
-        FirebaseDatabase.getInstance().getReference().child("friend/" + StaticConfig.UID).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue() != null) {
-                    HashMap mapRecord = (HashMap) dataSnapshot.getValue();
-                    Iterator listKey = mapRecord.keySet().iterator();
-                    while (listKey.hasNext()) {
-                        String key = listKey.next().toString();
-                        listFriendID.add(mapRecord.get(key).toString());
-                    }
-                    getAllFriendInfo(0);
-                } else {
-                    dialogFindAllFriend.dismiss();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-    }
-
-    /**
-     * Truy cap bang user lay thong tin id nguoi dung
-     */
-    private void getAllFriendInfo(final int index) {
-        if (index == listFriendID.size()) {
-            //save list friend
-            adapter.notifyDataSetChanged();
-            dialogFindAllFriend.dismiss();
-            mSwipeRefreshLayout.setRefreshing(false);
-            detectFriendOnline.start();
-        } else {
-            final String id = listFriendID.get(index);
-            FirebaseDatabase.getInstance().getReference().child("user/" + id).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.getValue() != null) {
-                        Friend user = new Friend();
-                        HashMap mapUserInfo = (HashMap) dataSnapshot.getValue();
-                        user.name = (String) mapUserInfo.get("name");
-                        user.email = (String) mapUserInfo.get("email");
-                        user.avata = (String) mapUserInfo.get("avata");
-                        user.id = id;
-                        user.idRoom = id.compareTo(StaticConfig.UID) > 0 ? (StaticConfig.UID + id).hashCode() + "" : "" + (id + StaticConfig.UID).hashCode();
-                        dataListFriend.getListFriend().add(user);
-                        FriendDB.getInstance(getContext()).addFriend(user);
-                    }
-                    getAllFriendInfo(index + 1);
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-        }
-    }
 }
 
 class ListFriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private ListFriend listFriend;
-    private Context context;
     public static Map<String, Query> mapQuery;
     public static Map<String, DatabaseReference> mapQueryOnline;
     public static Map<String, ChildEventListener> mapChildListener;
     public static Map<String, ChildEventListener> mapChildListenerOnline;
     public static Map<String, Boolean> mapMark;
-    private FriendsFragment fragment;
     LovelyProgressDialog dialogWaitDeleting;
+      private ListFriend listFriend;
+      private Context context;
+      private FriendsFragment fragment;
 
     public ListFriendsAdapter(Context context, ListFriend listFriend, FriendsFragment fragment) {
         this.listFriend = listFriend;
@@ -456,7 +454,7 @@ class ListFriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         final String name = listFriend.getListFriend().get(position).name;
         final String id = listFriend.getListFriend().get(position).id;
         final String idRoom = listFriend.getListFriend().get(position).idRoom;
-        final String avata = listFriend.getListFriend().get(position).avata;
+          final String avata = listFriend.getListFriend().get(position).currentAvatar;
         ((ItemFriendViewHolder) holder).txtName.setText(name);
 
         ((View) ((ItemFriendViewHolder) holder).txtName.getParent().getParent().getParent())
@@ -589,10 +587,10 @@ class ListFriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 mapMark.put(id, true);
             }
         }
-        if (listFriend.getListFriend().get(position).avata.equals(StaticConfig.STR_DEFAULT_BASE64)) {
+          if (listFriend.getListFriend().get(position).currentAvatar.equals(StaticConfig.STR_DEFAULT_BASE64)) {
             ((ItemFriendViewHolder) holder).avata.setImageResource(R.drawable.default_avata);
         } else {
-            byte[] decodedString = Base64.decode(listFriend.getListFriend().get(position).avata, Base64.DEFAULT);
+                byte[] decodedString = Base64.decode(listFriend.getListFriend().get(position).currentAvatar, Base64.DEFAULT);
             Bitmap src = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
             ((ItemFriendViewHolder) holder).avata.setImageBitmap(src);
         }

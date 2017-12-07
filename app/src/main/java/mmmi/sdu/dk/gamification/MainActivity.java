@@ -3,8 +3,8 @@ package mmmi.sdu.dk.gamification;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +16,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
+
+import mmmi.sdu.dk.gamification.utils.DatabaseFacade;
 
 
 public class MainActivity extends Activity {
@@ -29,11 +31,17 @@ public class MainActivity extends Activity {
       protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
-
+            DatabaseFacade.getInstance().loadAvatars();
             //Firebase
             firebaseAuth = FirebaseAuth.getInstance();
             editTextEmail = (EditText) findViewById(R.id.userText);
             editTextPassword = (EditText) findViewById(R.id.pwdText);
+            if (getIntent().getStringExtra("user") != null) {
+                  editTextEmail.setText(getIntent().getStringExtra("user"));
+            }
+            if (getIntent().getStringExtra("pass") != null) {
+                  editTextPassword.setText(getIntent().getStringExtra("pass"));
+            }
             Button loginButton = (Button) findViewById(R.id.loginButton);
             progressDialog = new ProgressDialog(this);
 
@@ -77,7 +85,7 @@ public class MainActivity extends Activity {
                   return;
             }
 
-            progressDialog.setMessage("Registering Please Wait...");
+            progressDialog.setMessage("Logging in Please Wait...");
             progressDialog.show();
 
             firebaseAuth.signInWithEmailAndPassword(email, password)

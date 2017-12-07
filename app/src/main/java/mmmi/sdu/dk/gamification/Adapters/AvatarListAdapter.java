@@ -2,7 +2,6 @@ package mmmi.sdu.dk.gamification.Adapters;
 
 import android.content.Context;
 import android.database.DataSetObserver;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,24 +11,18 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
 import java.util.List;
 
 import mmmi.sdu.dk.gamification.R;
+import mmmi.sdu.dk.gamification.model.User;
+import mmmi.sdu.dk.gamification.utils.DatabaseFacade;
 
 public class AvatarListAdapter implements ListAdapter {
       private final List<AvatarItem> items;
       private final Context context;
       private final LayoutInflater inflater;
-      private DatabaseReference mDatabase;
 
       public AvatarListAdapter(List<AvatarItem> items, Context context) {
             this.items = items;
@@ -39,7 +32,7 @@ public class AvatarListAdapter implements ListAdapter {
 
       @Override
       public View getView(final int position, View convertView, ViewGroup parent) {
-            AvatarHolder holder;
+            final AvatarHolder holder;
             if (convertView == null) {
                   holder = new AvatarHolder();
                   convertView = inflater.inflate(R.layout.listitem_avatar, parent, false);
@@ -62,11 +55,15 @@ public class AvatarListAdapter implements ListAdapter {
                   holder.btn_buy.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                              buyEquipAvatar(items.get(position), position);
+                              holder.btn_buy.setText(buyEquipAvatar(items.get(position), position));
                         }
                   });
+                  holder.btn_buy.setText("Get it!");
                   if (item.isOwned()) {
                         holder.btn_buy.setText("Use as avatar");
+                  }
+                  if (DatabaseFacade.getInstance().getUser().getCurrentAvatar() == position) {
+                        holder.btn_buy.setText("Currently using");
                   }
             }
 
@@ -128,58 +125,36 @@ public class AvatarListAdapter implements ListAdapter {
             return items.isEmpty();
       }
 
-      private void buyEquipAvatar(AvatarItem item, int position) {
-            mDatabase = FirebaseDatabase.getInstance().getReference();
-            FirebaseUser userId = FirebaseAuth.getInstance().getCurrentUser();
-            final String uid = userId.getUid();
-
+      private String buyEquipAvatar(AvatarItem item, int position) {
+            User user = DatabaseFacade.getInstance().getUser();
+            String btnText = "Get it!";
             if (!item.isOwned()) {
-                  final int[] coins = new int[1];
-                  mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
-                              coins[0] = (int) dataSnapshot.child(uid).child("avatar").child("coins").getValue();
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                        }
-                  });
                   //if coin is sufficient and that the user didn't get it yet
-                  if (coins[0] >= item.getPrice() && !item.isOwned()) {
+                  if (user.getCoins() >= item.getPrice() && !item.isOwned()) {
 
                         //Take off his coin
-                        int newCoin = coins[0] - item.getPrice();
-                        String newC = Integer.toString(newCoin);
-                        mDatabase.child(uid).child("avatar").child("coins").setValue(newC);
-
-                        //Add avatar
-                        mDatabase.child(uid).child("avatar").child("avatar" + position).child("have").setValue("true");
+                        user.setCoins(user.getCoins() - item.getPrice());
+                        user.getAvatarsOwned().add(position);
+                        user.setCurrentAvatar(position);
                         Toast.makeText(context, "Congratulations! You buy the avatar", Toast.LENGTH_LONG).show();
                         items.get(position).setOwned(true);
+                        DatabaseFacade.getInstance().updateUser(user);
+                        btnText = "Use as avatar";
                   } else {
-                        Toast.makeText(context, "You must have " + (item.getPrice() - coins[0]) + " coins more", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "You must have " + (item.getPrice() - user.getCoins()) + " coins more", Toast.LENGTH_LONG).show();
                   }
             } else {
                   //If the user have already an avatar
-                  mDatabase.child(uid).child("avatar").child("currentAvatar").setValue(item.getImageUrl());
+                  user.setCurrentAvatar(position);
                   Toast.makeText(context, "Congratulations! You put this avatar in profile", Toast.LENGTH_LONG).show();
-
+                  DatabaseFacade.getInstance().updateUser(user);
+                  btnText = "Currently Using";
             }
-
+            return btnText;
       }
 
       private void loadImageFromUrl(String url, ImageView imageView) {
-            Picasso.with(context).load(url).resize(100,100).into(imageView, new com.squareup.picasso.Callback() {
-
-                  @Override
-                  public void onSuccess() {
-                  }
-
-                  @Override
-                  public void onError() {
-                  }
-            });
+            Picasso.with(context).load(url).resize(100, 100).into(imageView);
       }
 
 

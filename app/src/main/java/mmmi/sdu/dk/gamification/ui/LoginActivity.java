@@ -33,15 +33,14 @@ import mmmi.sdu.dk.gamification.ChatMainActivity;
 import mmmi.sdu.dk.gamification.R;
 import mmmi.sdu.dk.gamification.data.SharedPreferenceHelper;
 import mmmi.sdu.dk.gamification.data.StaticConfig;
-import mmmi.sdu.dk.gamification.model.User;
-
+import mmmi.sdu.dk.gamification.model.ChatUser;
 
 
 public class LoginActivity extends AppCompatActivity {
     private static String TAG = "LoginActivity";
-    FloatingActionButton fab;
     private final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+      FloatingActionButton fab;
     private EditText editTextUsername, editTextPassword;
     private LovelyProgressDialog waitingDialog;
 
@@ -81,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    // User is signed in
+                      // ChatUser is signed in
                     StaticConfig.UID = user.getUid();
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                     if (firstTimeAccess) {
@@ -341,11 +340,11 @@ public class LoginActivity extends AppCompatActivity {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     waitingDialog.dismiss();
                     HashMap hashUser = (HashMap) dataSnapshot.getValue();
-                    User userInfo = new User();
-                    userInfo.name = (String) hashUser.get("name");
-                    userInfo.email = (String) hashUser.get("email");
-                    userInfo.avata = (String) hashUser.get("avata");
-                    SharedPreferenceHelper.getInstance(LoginActivity.this).saveUserInfo(userInfo);
+                      ChatUser chatUserInfo = new ChatUser();
+                      chatUserInfo.name = (String) hashUser.get("name");
+                      chatUserInfo.email = (String) hashUser.get("email");
+                      chatUserInfo.currentAvatar = (String) hashUser.get("currentAvatar");
+                      SharedPreferenceHelper.getInstance(LoginActivity.this).saveUserInfo(chatUserInfo);
                 }
 
                 @Override
@@ -359,11 +358,11 @@ public class LoginActivity extends AppCompatActivity {
          * Khoi tao thong tin mac dinh cho tai khoan moi
          */
         void initNewUserInfo() {
-            User newUser = new User();
-            newUser.email = user.getEmail();
-            newUser.name = user.getEmail().substring(0, user.getEmail().indexOf("@"));
-            newUser.avata = StaticConfig.STR_DEFAULT_BASE64;
-            FirebaseDatabase.getInstance().getReference().child("user/" + user.getUid()).setValue(newUser);
+              ChatUser newChatUser = new ChatUser();
+              newChatUser.email = user.getEmail();
+              newChatUser.name = user.getEmail().substring(0, user.getEmail().indexOf("@"));
+              newChatUser.currentAvatar = StaticConfig.STR_DEFAULT_BASE64;
+              FirebaseDatabase.getInstance().getReference().child("user/" + user.getUid()).setValue(newChatUser);
         }
     }
 }

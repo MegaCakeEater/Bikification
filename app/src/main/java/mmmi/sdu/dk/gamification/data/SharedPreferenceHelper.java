@@ -3,8 +3,7 @@ package mmmi.sdu.dk.gamification.data;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import mmmi.sdu.dk.gamification.model.User;
-
+import mmmi.sdu.dk.gamification.model.ChatUser;
 
 
 public class SharedPreferenceHelper {
@@ -14,7 +13,7 @@ public class SharedPreferenceHelper {
     private static String SHARE_USER_INFO = "userinfo";
     private static String SHARE_KEY_NAME = "name";
     private static String SHARE_KEY_EMAIL = "email";
-    private static String SHARE_KEY_AVATA = "avata";
+      private static String SHARE_KEY_AVATA = "currentAvatar";
     private static String SHARE_KEY_UID = "uid";
 
 
@@ -29,25 +28,25 @@ public class SharedPreferenceHelper {
         return instance;
     }
 
-    public void saveUserInfo(User user) {
-        editor.putString(SHARE_KEY_NAME, user.name);
-        editor.putString(SHARE_KEY_EMAIL, user.email);
-        editor.putString(SHARE_KEY_AVATA, user.avata);
+      public void saveUserInfo(ChatUser chatUser) {
+            editor.putString(SHARE_KEY_NAME, chatUser.name);
+            editor.putString(SHARE_KEY_EMAIL, chatUser.email);
+            editor.putString(SHARE_KEY_AVATA, chatUser.currentAvatar);
         editor.putString(SHARE_KEY_UID, StaticConfig.UID);
         editor.apply();
     }
 
-    public User getUserInfo(){
+      public ChatUser getUserInfo() {
         String userName = preferences.getString(SHARE_KEY_NAME, "");
         String email = preferences.getString(SHARE_KEY_EMAIL, "");
         String avatar = preferences.getString(SHARE_KEY_AVATA, "default");
 
-        User user = new User();
-        user.name = userName;
-        user.email = email;
-        user.avata = avatar;
+            ChatUser chatUser = new ChatUser();
+            chatUser.name = userName;
+            chatUser.email = email;
+            chatUser.currentAvatar = avatar;
 
-        return user;
+            return chatUser;
     }
 
     public String getUID(){
