@@ -214,7 +214,8 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                     HashMap mapUserInfo = (HashMap) dataSnapshot.getValue();
                                     user.name = (String) mapUserInfo.get("name");
                                     user.email = (String) mapUserInfo.get("email");
-                                    user.currentAvatar = (String) mapUserInfo.get("currentAvatar");
+                                    //Avatar errors !!//
+                                    //user.currentAvatar = (String) mapUserInfo.get("currentAvatar");
                                     user.id = id;
                                     user.idRoom = id.compareTo(StaticConfig.UID) > 0 ? (StaticConfig.UID + id).hashCode() + "" : "" + (id + StaticConfig.UID).hashCode();
                                     dataListFriend.getListFriend().add(user);
@@ -266,8 +267,6 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         public void onTextInputConfirmed(String text) {
                             //Tim id user id
                             findIDEmail(text);
-                            //Check xem da ton tai ban ghi friend chua
-                            //Ghi them 1 ban ghi
                         }
                     })
                     .show();
@@ -310,7 +309,8 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             Friend user = new Friend();
                             user.name = (String) userMap.get("name");
                             user.email = (String) userMap.get("email");
-                              user.currentAvatar = (String) userMap.get("currentAvatar");
+                            //AVATAR ERROR !!!//
+                            //user.currentAvatar = (String) userMap.get("currentAvatar");
                             user.id = id;
                             user.idRoom = id.compareTo(StaticConfig.UID) > 0 ? (StaticConfig.UID + id).hashCode() + "" : "" + (id + StaticConfig.UID).hashCode();
                             checkBeforAddFriend(id, user);
@@ -325,9 +325,6 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
             });
         }
 
-        /**
-         * Lay danh sach friend cua một UID
-         */
         private void checkBeforAddFriend(final String idFriend, Friend userInfo) {
             dialogWait.setCancelable(false)
                     .setIcon(R.drawable.ic_add_friend)
@@ -335,7 +332,6 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     .setTopColorRes(R.color.colorPrimary)
                     .show();
 
-            //Check xem da ton tai id trong danh sach id chua
             if (listFriendID.contains(idFriend)) {
                 dialogWait.dismiss();
                 new LovelyInfoDialog(context)
@@ -470,19 +466,20 @@ class ListFriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         intent.putCharSequenceArrayListExtra(StaticConfig.INTENT_KEY_CHAT_ID, idFriend);
                         intent.putExtra(StaticConfig.INTENT_KEY_CHAT_ROOM_ID, idRoom);
                         ChatActivity.bitmapAvataFriend = new HashMap<>();
-                        if (!avata.equals(StaticConfig.STR_DEFAULT_BASE64)) {
+
+                        //AVATAR ERROR !!//
+                        /*if (!avata.equals(StaticConfig.STR_DEFAULT_BASE64)) {
                             byte[] decodedString = Base64.decode(avata, Base64.DEFAULT);
                             ChatActivity.bitmapAvataFriend.put(id, BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));
                         } else {
                             ChatActivity.bitmapAvataFriend.put(id, BitmapFactory.decodeResource(context.getResources(), R.drawable.default_avata));
-                        }
+                        }*/
 
                         mapMark.put(id, null);
                         fragment.startActivityForResult(intent, FriendsFragment.ACTION_START_CHAT);
                     }
                 });
 
-        //nhấn giữ để xóa bạn
         ((View) ((ItemFriendViewHolder) holder).txtName.getParent().getParent().getParent())
                 .setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
@@ -587,13 +584,16 @@ class ListFriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 mapMark.put(id, true);
             }
         }
-          if (listFriend.getListFriend().get(position).currentAvatar.equals(StaticConfig.STR_DEFAULT_BASE64)) {
+
+
+        //AVATAR ERROR !!!//
+        /*if (listFriend.getListFriend().get(position).currentAvatar.equals(StaticConfig.STR_DEFAULT_BASE64)) {
             ((ItemFriendViewHolder) holder).avata.setImageResource(R.drawable.default_avata);
         } else {
                 byte[] decodedString = Base64.decode(listFriend.getListFriend().get(position).currentAvatar, Base64.DEFAULT);
             Bitmap src = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
             ((ItemFriendViewHolder) holder).avata.setImageBitmap(src);
-        }
+        }*/
 
 
         if (mapQueryOnline.get(id) == null && mapChildListenerOnline.get(id) == null) {

@@ -405,6 +405,9 @@ class ListGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 for(String id : listGroup.get(position).member) {
                     idFriend.add(id);
                     String avata = listFriend.getAvataById(id);
+
+                    //Avatar error !!
+                    /*
                     if(!avata.equals(StaticConfig.STR_DEFAULT_BASE64)) {
                         byte[] decodedString = Base64.decode(avata, Base64.DEFAULT);
                         ChatActivity.bitmapAvataFriend.put(id, BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length));
@@ -412,7 +415,7 @@ class ListGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         ChatActivity.bitmapAvataFriend.put(id, BitmapFactory.decodeResource(context.getResources(), R.drawable.default_avata));
                     }else {
                         ChatActivity.bitmapAvataFriend.put(id, null);
-                    }
+                    }*/
                 }
                 intent.putCharSequenceArrayListExtra(StaticConfig.INTENT_KEY_CHAT_ID, idFriend);
                 intent.putExtra(StaticConfig.INTENT_KEY_CHAT_ROOM_ID, listGroup.get(position).id);
